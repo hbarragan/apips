@@ -163,7 +163,7 @@ public class RecipeServiceImpl extends BaseService implements RecipeService {
             long count =functions.getFilteredMasterRecipeCount(masterRecipeFilter);
             return ResponseEntity.ok().body(new PageResponseOdata<>("",count,data));
         } catch (Exception ex) {
-            throw new IllegalArgumentException("Petición OData inválida: " + ex.getMessage(), ex);
+            throw new IllegalArgumentException(buildErrorDataSweepException(ex),ex);
         }
     }
 

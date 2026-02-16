@@ -25,6 +25,7 @@ import org.apache.olingo.server.core.uri.parser.UriParserException;
 import org.apache.olingo.server.core.uri.validator.UriValidationException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
+import pnuts.lang.PnutsException;
 
 import java.net.URLDecoder;
 import java.net.URLEncoder;
@@ -371,5 +372,21 @@ public abstract class BaseService {
                 }
             }
         }
+    }
+
+    public static String buildErrorDataSweepException(Exception ex) {
+        String message = null;
+
+        if (ex instanceof PnutsException pnutsException && pnutsException.getThrowable() != null) {
+            message = pnutsException.getThrowable().getMessage();
+        } else if (ex.getCause() instanceof PnutsException pnutsCause && pnutsCause.getThrowable() != null) {
+            message = pnutsCause.getThrowable().getMessage();
+        }
+
+        if (message == null || message.isBlank()) {
+            message = ex.getCause() != null ? ex.getCause().getMessage() : ex.getMessage();
+        }
+
+        return message;
     }
 }

@@ -17,6 +17,8 @@ import org.apache.olingo.server.api.uri.queryoption.expression.UnaryOperatorKind
 
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import static com.adasoft.pharmasuite.apips.api.common.domain.odata.FilterRegistry.Op.CONTAINS;
 import static com.adasoft.pharmasuite.apips.api.common.domain.odata.FilterRegistry.Op.ENDSWITH;
@@ -43,8 +45,19 @@ public class GenericFilterVisitor<F> implements ExpressionVisitor<Object> {
     private static String prop(Member m) {
         List<UriResource> parts = m.getResourcePath().getUriResourceParts();
         if (parts == null || parts.isEmpty()) return null;
+
+        String path = parts.stream()
+                .filter(UriResourceProperty.class::isInstance)
+                .map(UriResourceProperty.class::cast)
+                .map(p -> p.getProperty().getName())
+                .filter(Objects::nonNull)
+                .collect(Collectors.joining("/"));
+
+        if (!path.isEmpty()) {
+            return path;
+        }
+
         UriResource last = parts.get(parts.size() - 1);
-        if (last instanceof UriResourceProperty p) return p.getProperty().getName();
         return last.toString();
     }
 

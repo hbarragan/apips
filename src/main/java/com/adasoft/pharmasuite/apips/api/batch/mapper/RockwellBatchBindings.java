@@ -129,7 +129,7 @@ public final class RockwellBatchBindings {
 
         // ---------- Quantity (value numérico separado) ----------
         batchFilterBuilder.bind("quantity/value", EnumSet.of(GE, GT, LE, LT, EQ), (filter, operation, raw) -> {
-            MeasuredValue mv = toMeasured(filter.getServer(), raw, qtyUom);
+            MeasuredValue mv = toMeasured(filter.getServer(),raw, qtyUom);
             switch (operation) {
                 case GE -> filter.forQuantityGreaterThanOrEqualTo(mv);
                 case GT -> filter.forQuantityGreaterThan(mv);

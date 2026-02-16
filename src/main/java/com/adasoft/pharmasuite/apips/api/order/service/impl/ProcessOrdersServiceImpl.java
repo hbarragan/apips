@@ -193,7 +193,7 @@ public class ProcessOrdersServiceImpl extends BaseService implements ProcessOrde
                     .body(new PageResponseOdata<>("", (long) count, data));
 
         } catch (Exception ex) {
-            throw new IllegalArgumentException("Petición OData inválida: " + ex.getMessage(), ex);
+            throw new IllegalArgumentException(buildErrorDataSweepException(ex),ex);
         }
     }
 

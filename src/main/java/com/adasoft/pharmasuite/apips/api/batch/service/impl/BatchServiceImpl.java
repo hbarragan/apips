@@ -35,7 +35,9 @@ import com.rockwell.mes.services.inventory.ifc.TransactionType;
 import com.rockwell.mes.services.inventory.impl.SublotService;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.http.ResponseEntity;
+import pnuts.lang.PnutsException;
 
+import javax.xml.crypto.Data;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -122,9 +124,12 @@ public class BatchServiceImpl extends BaseService implements BatchService {
             return ResponseEntity.ok().headers(getHttpHeadersOdata(odataPage.getRequest())).body(new PageResponseOdata<>("",count.longValue(),data));
 
         } catch (Exception ex) {
-            throw new IllegalArgumentException("Petición OData inválida: " + ex.getMessage(), ex);
+            throw new IllegalArgumentException(buildErrorDataSweepException(ex),ex);
         }
+
     }
+
+
 
     @Override
     public ResponseEntity<PageResponseOdata<TransactionHistory>> getFilteredTransactionHistoryOData(OdataPage odataPage) {
@@ -149,7 +154,7 @@ public class BatchServiceImpl extends BaseService implements BatchService {
             List<TransactionHistory> data = buildGetAllTransactionHistory(filterRockwell);
             return ResponseEntity.ok().headers(getHttpHeadersOdata(odataPage.getRequest())).body(new PageResponseOdata<>("",count,data));
         } catch (Exception ex) {
-            throw new IllegalArgumentException("Petición OData inválida: " + ex.getMessage(), ex);
+            throw new IllegalArgumentException(buildErrorDataSweepException(ex),ex);
         }
     }
 

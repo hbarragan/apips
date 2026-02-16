@@ -81,7 +81,7 @@ public class WorkflowServiceImpl extends BaseService implements WorkflowService 
                     .body(new PageResponseOdata<>("",count.longValue(),data));
 
         } catch (Exception ex) {
-            throw new IllegalArgumentException("Petición OData inválida: " + ex.getMessage(), ex);
+            throw new IllegalArgumentException(buildErrorDataSweepException(ex),ex);
         }
     }
 

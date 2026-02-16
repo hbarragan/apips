@@ -1,0 +1,79 @@
+HELP.md
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+.class
+/bin
+/plugin
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### VS Code ###
+.vscode/
+
+
+### Docker volume ###
+docker/volumes/nexus-data/
+#Archivo comprimido nexus-data.7z
+!nexus-data.7z
+
+### Dependencies ###
+/build/python/dependencies/*.jar
+/build/python/dependencies/
+*.jar
+/build/python/dependencies/*.xml
+
+
+# Directorios generados por Gradle
+.gradle/
+build/
+
+# Gradle Wrapper (se versiona el JAR, pero no los scripts generados)
+!gradle/wrapper/gradle-wrapper.jar
+
+# Propiedades locales de Gradle (opcional)
+gradle.properties
+
+# Ignore Gradle project-specific cache directory
+.gradle
+
+# Ignore Gradle build output directory
+build
+
+doc/deploy/SymcontPharmasuiteAPI/app/lib/core/jdk
+doc/deploy/SymcontPharmasuiteAPI/app/runtime
+
+doc/deploy/SymcontPharmasuiteAPI/app/lib/ps10/*
+doc/deploy/SymcontPharmasuiteAPI/app/lib/ps11/*
+install.log
+*.zip
+*.tar.gz
+*.tar
+*.7z
+*.exe
+doc/deploy/SymcontPharmasuiteAPI/app/lib/core/log4j2.xml
+doc/deploy/SymcontPharmasuiteAPI/installer/lib
+.continue

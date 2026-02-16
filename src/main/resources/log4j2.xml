@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="INFO">
+    <Appenders>
+        <!-- Appender para la consola -->
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} [%t] %-5level %C{1}.%M:%L - %msg%n"/>
+            <RegexFilter regex=".*retrieveControlRecipe found.*" onMatch="DENY" onMismatch="NEUTRAL"/>
+        </Console>
+
+        <!-- Appender para archivo con rotación -->
+        <RollingFile name="File" fileName="C:/Adasoft/Symcont-Pharmasuite-api/logs/app.log" filePattern="C:/logs/app-%d{yyyy-MM-dd}.log.gz">
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} [%t] %-5level %C{1}.%M:%L - %msg%n"/>
+            <Policies>
+                <!-- Rotación diaria -->
+                <TimeBasedTriggeringPolicy />
+                <!-- Tamaño máximo por archivo -->
+                <SizeBasedTriggeringPolicy size="10MB"/>
+            </Policies>
+            <RegexFilter regex=".*retrieveControlRecipe found.*" onMatch="DENY" onMismatch="NEUTRAL"/>
+        </RollingFile>
+    </Appenders>
+
+    <Loggers>
+        <!-- Logger específico para un paquete -->
+        <Logger name="com.adasoft" level="INFO" additivity="false">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="File"/>
+        </Logger>
+
+        <Logger name="org.springframework.web" level="INFO" additivity="false">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="File"/>
+        </Logger>
+
+        <Logger name="org.springframework.http.converter.json" level="TRACE" additivity="false">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="File"/>
+        </Logger>
+
+        <Logger name="org.springframework.web.servlet.mvc.method.annotation.RequestResponseBodyMethodProcessor"
+                level="TRACE" additivity="false">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="File"/>
+        </Logger>
+        <!-- Logger raíz -->
+        <Root level="INFO">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="File"/>
+        </Root>
+    </Loggers>
+</Configuration>

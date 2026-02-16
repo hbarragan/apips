@@ -1,0 +1,14 @@
+{
+  "name": "GET /odata/TransactionHistories with $count",
+  "method": "GET",
+  "path": "/odata/TransactionHistories",
+  "query": {
+    "$count": true,
+    "$top": 5
+  },
+  "expect": {
+    "status": 200,
+    "bodyType": "OBJECT",
+    "requiredJsonPaths": ["value", "$['@odata.count']"]
+  }
+}

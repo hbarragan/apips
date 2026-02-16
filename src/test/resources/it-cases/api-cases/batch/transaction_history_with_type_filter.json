@@ -1,0 +1,10 @@
+{
+  "name": "GET /api/batch/transaction-history with orderAssociateType=OUTPUT",
+  "method": "GET",
+  "path": "/api/batch/transaction-history",
+  "query": { "orderAssociateType": ["OUTPUT"] },
+  "expect": {
+    "status": 200,
+    "bodyType": "ARRAY"
+  }
+}

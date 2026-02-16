@@ -1,0 +1,10 @@
+{
+  "name": "GET /api/batch/sublot with batchKey=0 (edge)",
+  "method": "GET",
+  "path": "/api/batch/sublot",
+  "query": { "batchKey": 0 },
+  "expect": {
+    "status": 200,
+    "bodyType": "ARRAY"
+  }
+}

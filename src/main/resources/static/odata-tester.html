@@ -1,0 +1,377 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"/>
+  <title>OData v4 Tester – Batch</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <style>
+    :root { --bg:#0f172a; --panel:#111827; --muted:#9ca3af; --text:#e5e7eb; --accent:#22d3ee; --ok:#10b981; --bad:#ef4444; }
+    *{box-sizing:border-box;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Arial}
+    body{margin:0;background:linear-gradient(180deg,#0b1223,#0a0f1e);}
+    header{padding:16px 20px;color:var(--text);border-bottom:1px solid #1f2937}
+    header h1{margin:0;font-size:18px;letter-spacing:.3px}
+    header small{color:var(--muted)}
+    main{padding:18px;display:grid;gap:16px;grid-template-columns: 380px 1fr}
+    .card{background:var(--panel);border:1px solid #1f2937;border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,.2)}
+    .card h2{margin:0;padding:12px 14px;font-size:14px;color:var(--text);border-bottom:1px solid #1f2937}
+    .card .body{padding:14px;color:var(--text)}
+    label{font-size:12px;color:var(--muted);display:block;margin:8px 0 6px}
+    input, select, textarea{width:100%;background:#0b1020;color:var(--text);border:1px solid #1f2937;border-radius:10px;padding:10px 12px;font-size:13px;outline:none}
+    textarea{min-height:74px;resize:vertical}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+    .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+    button{background:#0b1020;border:1px solid #1f2937;color:var(--text);padding:10px 12px;border-radius:10px;font-size:13px;cursor:pointer}
+    button.primary{background:linear-gradient(180deg,#0ea5e9,#22d3ee);color:#001018;border:none}
+    button.ghost{background:transparent;border:1px dashed #374151}
+    .kvs{display:grid;grid-template-columns:1fr 1fr auto;gap:6px}
+    .tag{display:inline-flex;gap:6px;align-items:center;background:#0b1020;border:1px solid #1f2937;color:var(--muted);font-size:12px;padding:4px 8px;border-radius:999px}
+    .muted{color:var(--muted)}
+    .mono{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace}
+    pre{white-space:pre-wrap;word-break:break-word;background:#0a0f1f;border:1px solid #1f2937;border-radius:12px;padding:10px;color:#d1d5db;font-size:12px}
+    table{width:100%;border-collapse:collapse;font-size:12px}
+    th,td{padding:8px;border-bottom:1px solid #1f2937;color:#d1d5db;vertical-align:top}
+    th{color:#9ca3af;text-align:left}
+    .ok{color:var(--ok)}
+    .bad{color:var(--bad)}
+    .pill{display:inline-block;padding:2px 8px;border-radius:999px;background:#0b1020;border:1px solid #1f2937;color:#a3e635;font-size:11px}
+  </style>
+</head>
+<body>
+<header>
+  <h1>OData v4 Tester – Batch <small class="muted">($filter, $orderby, $top, $skip, $count, Prefer, nextLink)</small></h1>
+</header>
+
+<main>
+  <!-- LEFT: Controls -->
+  <section class="card">
+    <h2>Solicitud</h2>
+    <div class="body">
+      <label>Base URL del endpoint (GET colección)</label>
+      <input id="baseUrl" placeholder="http://localhost:9102/api/batch/paged" value="http://localhost:9102/api/batch/paged"/>
+
+      <div class="row">
+        <div>
+          <label>$orderby (ej. <span class="mono">creationTime desc</span>)</label>
+          <input id="orderby" placeholder="creationTime desc"/>
+        </div>
+        <div>
+          <label>Prefer: <span class="mono">odata.maxpagesize</span> (opcional)</label>
+          <input id="preferMax" type="number" min="1" placeholder="25"/>
+        </div>
+      </div>
+
+      <div class="row">
+        <div>
+          <label>$top</label>
+          <input id="top" type="number" min="1" placeholder="25"/>
+        </div>
+        <div>
+          <label>$skip</label>
+          <input id="skip" type="number" min="0" placeholder="0"/>
+        </div>
+      </div>
+
+      <div class="row">
+        <div>
+          <label>$count</label>
+          <select id="count"><option value="">(sin $count)</option><option value="true">$count=true</option></select>
+        </div>
+        <div>
+          <label>OData-MaxVersion (request)</label>
+          <select id="maxVersion"><option value="">(no enviar)</option><option value="4.0">4.0</option><option value="4.01">4.01</option></select>
+        </div>
+      </div>
+
+      <label>$filter (libre)</label>
+      <textarea id="filter" placeholder="creationTime ge 2025-01-01T00:00:00Z and creationTime le 2025-12-31T23:59:59Z"></textarea>
+
+      <details>
+        <summary class="muted">Constructor rápido de $filter (añade al cuadro anterior)</summary>
+        <div class="row">
+          <div>
+            <label>creationTime &ge;</label>
+            <input id="fFrom" type="datetime-local"/>
+          </div>
+          <div>
+            <label>creationTime &le;</label>
+            <input id="fTo" type="datetime-local"/>
+          </div>
+        </div>
+        <div class="row">
+          <div>
+            <label>status eq</label>
+            <input id="fStatus" placeholder="Finished"/>
+          </div>
+          <div>
+            <label>name eq</label>
+            <input id="fName" placeholder="BATCH-001"/>
+          </div>
+        </div>
+        <div class="row">
+          <div>
+            <label>orderAssociateType eq</label>
+            <input id="fType" placeholder="OUTPUT"/>
+          </div>
+          <div>
+            <label>orderAssociateSubtype eq</label>
+            <input id="fSubtype" placeholder="BATCH_GENERATION"/>
+          </div>
+        </div>
+        <div class="actions">
+          <button class="ghost" id="btnBuildFilter">Añadir al $filter</button>
+          <span class="muted">Se unirán con <span class="mono">and</span></span>
+        </div>
+      </details>
+
+      <h3 style="font-size:13px;color:#cbd5e1;margin:16px 0 6px">Headers personalizados</h3>
+      <div id="headers" class="kvs">
+        <input placeholder="Header-Name"/>
+        <input placeholder="Header-Value"/>
+        <button class="ghost" type="button" onclick="addHeaderRow()">+</button>
+      </div>
+
+      <div class="actions">
+        <button class="primary" id="btnSend">Ejecutar GET</button>
+        <button id="btnNext" disabled>Seguir @odata.nextLink →</button>
+        <button class="ghost" id="btnReset">Reset</button>
+        <button class="ghost" id="btnCurl">Copiar cURL</button>
+      </div>
+
+      <p class="muted" style="margin-top:8px">
+        Consejos: usa <span class="mono">$count=true</span> para pedir <span class="pill">@odata.count</span> y
+        <span class="mono">Prefer: odata.maxpagesize</span> para paginación solicitada por el cliente (si el servidor la aplica devolverá <span class="pill">Preference-Applied</span>). :contentReference[oaicite:3]{index=3}
+      </p>
+    </div>
+  </section>
+
+  <!-- RIGHT: Results -->
+  <section class="card">
+    <h2>Respuesta</h2>
+    <div class="body">
+      <div id="statusLine" class="muted" style="margin-bottom:6px">Sin respuesta aún.</div>
+
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px">
+        <span class="tag">OData-Version: <span id="hdrVer">–</span></span>
+        <span class="tag">Preference-Applied: <span id="hdrPref">–</span></span>
+        <span class="tag">Content-Type: <span id="hdrCT">–</span></span>
+      </div>
+
+      <div class="row">
+        <div>
+          <label>Request URL</label>
+          <pre id="reqUrl" class="mono"></pre>
+        </div>
+        <div>
+          <label>cURL (1 línea)</label>
+          <pre id="curl" class="mono"></pre>
+        </div>
+      </div>
+
+      <div class="row">
+        <div>
+          <label>Headers de respuesta</label>
+          <div style="max-height:200px;overflow:auto;border:1px solid #1f2937;border-radius:10px">
+            <table id="tblHeaders">
+              <thead><tr><th>Header</th><th>Valor</th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+        <div>
+          <label>Metadata OData</label>
+          <div>
+            <div class="tag">value.length: <span id="valLen">0</span></div>
+            <div class="tag">@odata.count: <span id="odataCount">–</span></div>
+            <div class="tag">@odata.nextLink: <span id="odataNext">–</span></div>
+          </div>
+        </div>
+      </div>
+
+      <label>Body (JSON pretty)</label>
+      <pre id="body" class="mono"></pre>
+    </div>
+  </section>
+</main>
+
+<script>
+  const $ = sel => document.querySelector(sel);
+  const reqUrl = $("#reqUrl");
+  const bodyEl = $("#body");
+  const statusLine = $("#statusLine");
+  const hdrVer = $("#hdrVer");
+  const hdrPref = $("#hdrPref");
+  const hdrCT = $("#hdrCT");
+  const tblHeaders = $("#tblHeaders tbody");
+  const curlEl = $("#curl");
+  const valLen = $("#valLen");
+  const odataCount = $("#odataCount");
+  const odataNext = $("#odataNext");
+  const btnNext = $("#btnNext");
+
+  let lastNextLink = null;
+  let lastRequest = null;
+
+  function addHeaderRow() {
+    const c = document.getElementById("headers");
+    const name = document.createElement("input"); name.placeholder="Header-Name";
+    const value= document.createElement("input"); value.placeholder="Header-Value";
+    const btn  = document.createElement("button"); btn.className="ghost"; btn.textContent="-";
+    btn.type="button"; btn.onclick = e => c.removeChild(row);
+    const row = document.createElement("div"); row.className="kvs";
+    row.appendChild(name); row.appendChild(value); row.appendChild(btn);
+    c.appendChild(row);
+  }
+
+  function toIsoZ(local) {
+    if (!local) return "";
+    const d = new Date(local);
+    return new Date(d.getTime() - d.getTimezoneOffset()*60000).toISOString().replace(/\.\d{3}Z$/, "Z");
+  }
+
+  function buildFilterFromBuilder() {
+    const parts = [];
+    const fFrom = $("#fFrom").value;
+    const fTo = $("#fTo").value;
+    const st = $("#fStatus").value.trim();
+    const nm = $("#fName").value.trim();
+    const t  = $("#fType").value.trim();
+    const sub= $("#fSubtype").value.trim();
+
+    if (fFrom) parts.push(`creationTime ge ${toIsoZ(fFrom)}`);
+    if (fTo)   parts.push(`creationTime le ${toIsoZ(fTo)}`);
+    if (st)    parts.push(`status eq '${st.replace(/'/g,"''")}'`);
+    if (nm)    parts.push(`name eq '${nm.replace(/'/g,"''")}'`);
+    if (t)     parts.push(`orderAssociateType eq '${t.replace(/'/g,"''")}'`);
+    if (sub)   parts.push(`orderAssociateSubtype eq '${sub.replace(/'/g,"''")}'`);
+    return parts.join(" and ");
+  }
+
+  function buildUrl(base, opts) {
+    const u = new URL(base);
+    if (opts.filter) u.searchParams.set("$filter", opts.filter);
+    if (opts.orderby) u.searchParams.set("$orderby", opts.orderby);
+    if (opts.top) u.searchParams.set("$top", String(opts.top));
+    if (opts.skip) u.searchParams.set("$skip", String(opts.skip));
+    if (opts.count) u.searchParams.set("$count", "true");
+    return u.toString();
+  }
+
+  function collectHeaders() {
+    const hs = {};
+    const preferMax = $("#preferMax").value;
+    if (preferMax) hs["Prefer"] = `odata.maxpagesize=${preferMax}`;
+    const maxv = $("#maxVersion").value;
+    if (maxv) hs["OData-MaxVersion"] = maxv; // opcional
+    // custom rows
+    const rows = Array.from(document.querySelectorAll("#headers .kvs"));
+    rows.forEach(r=>{
+      const [k,v,btn]= r.children;
+      if (k.value && v.value) hs[k.value.trim()] = v.value;
+    });
+    hs["Accept"] = "application/json";
+    return hs;
+  }
+
+  function buildCurl(url, headers) {
+    const h = Object.entries(headers).map(([k,v])=>`-H '${k}: ${v}'`).join(" ");
+    return `curl -sS ${h} '${url}'`;
+  }
+
+  async function send(url, headers) {
+    const t0 = performance.now();
+    const res = await fetch(url, { headers });
+    const t1 = performance.now();
+
+    const ct = res.headers.get("content-type") || "";
+    let text = await res.text();
+    let json = null;
+    try { json = JSON.parse(text); } catch(_) {}
+
+    // Show status
+    statusLine.innerHTML = `HTTP <b>${res.status}</b> ${res.statusText} · ${(t1-t0).toFixed(0)} ms`;
+
+    // Response headers
+    tblHeaders.innerHTML = "";
+    res.headers.forEach((v,k)=>{
+      const tr = document.createElement("tr");
+      const th = document.createElement("td"); th.textContent = k;
+      const td = document.createElement("td"); td.textContent = v;
+      tr.appendChild(th); tr.appendChild(td);
+      tblHeaders.appendChild(tr);
+    });
+
+    hdrVer.textContent = res.headers.get("OData-Version")||"–";
+    hdrPref.textContent= res.headers.get("Preference-Applied")||"–";
+    hdrCT.textContent  = ct||"–";
+
+    // Body & OData bits
+    bodyEl.textContent = json ? JSON.stringify(json, null, 2) : text;
+
+    const arr = json && (json.value || json.Value);
+    valLen.textContent = Array.isArray(arr) ? arr.length : 0;
+
+    const count = json && (json["@odata.count"] ?? json["odata.count"]);
+    odataCount.textContent = (count!=null) ? String(count) : "–";
+
+    lastNextLink = json && (json["@odata.nextLink"] ?? json["odata.nextLink"]);
+    odataNext.textContent = lastNextLink || "–";
+    btnNext.disabled = !lastNextLink;
+
+    // Keep last request (for curl)
+    lastRequest = { url, headers };
+    reqUrl.textContent = url;
+    curlEl.textContent = buildCurl(url, headers);
+  }
+
+  document.getElementById("btnBuildFilter").onclick = (e)=>{
+    e.preventDefault();
+    const built = buildFilterFromBuilder();
+    if (!built) return;
+    const ta = $("#filter");
+    ta.value = ta.value ? `${ta.value} and ${built}` : built;
+  };
+
+  document.getElementById("btnSend").onclick = async ()=>{
+    const base = $("#baseUrl").value.trim();
+    const opts = {
+      filter: $("#filter").value.trim(),
+      orderby: $("#orderby").value.trim(),
+      top: $("#top").value ? parseInt($("#top").value,10) : null,
+      skip: $("#skip").value ? parseInt($("#skip").value,10) : null,
+      count: $("#count").value === "true"
+    };
+    const url = buildUrl(base, opts);
+    await send(url, collectHeaders());
+  };
+
+  document.getElementById("btnNext").onclick = async ()=>{
+    if (!lastNextLink) return;
+    await send(lastNextLink, collectHeaders());
+  };
+
+  document.getElementById("btnReset").onclick = ()=>{
+    ["orderby","top","skip","preferMax","filter","fFrom","fTo","fStatus","fName","fType","fSubtype"].forEach(id=>{ const el=$("#"+id); if(el) el.value=""; });
+    $("#count").value = "";
+    $("#maxVersion").value = "";
+    tblHeaders.innerHTML = "";
+    bodyEl.textContent = "";
+    reqUrl.textContent = "";
+    curlEl.textContent = "";
+    statusLine.textContent = "Sin respuesta aún.";
+    hdrVer.textContent = hdrPref.textContent = hdrCT.textContent = "–";
+    valLen.textContent = "0";
+    odataCount.textContent = "–";
+    odataNext.textContent = "–";
+    btnNext.disabled = true;
+    lastNextLink = null; lastRequest = null;
+  };
+
+  document.getElementById("btnCurl").onclick = ()=>{
+    const text = curlEl.textContent || "";
+    if (!text) return;
+    navigator.clipboard.writeText(text);
+  };
+</script>
+</body>
+</html>

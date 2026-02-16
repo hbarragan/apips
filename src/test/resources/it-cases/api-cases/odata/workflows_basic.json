@@ -1,0 +1,11 @@
+{
+  "name": "GET /odata/Workflows basic",
+  "method": "GET",
+  "path": "/odata/Workflows",
+  "query": {},
+  "expect": {
+    "status": 200,
+    "bodyType": "OBJECT",
+    "requiredJsonPaths": ["value"]
+  }
+}

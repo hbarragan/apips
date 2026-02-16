@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <title>Tester OData Pagination (fixed)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    html,body{background:#0b0d10;color:#e8edf2;font:14px/1.5 system-ui,Segoe UI,Roboto,sans-serif;margin:0}
+    .wrap{max-width:1100px;margin:24px auto;padding:0 12px}
+    .card{background:#13161a;border-radius:14px;padding:14px;box-shadow:0 6px 20px rgba(0,0,0,.25)}
+    .grid{display:grid;gap:12px}
+    @media(min-width:900px){.grid.two{grid-template-columns:1fr 1fr}.cols{grid-template-columns:3fr 2fr}}
+    label{display:block;font-size:12px;color:#9aa7b2;margin-bottom:6px}
+    input[type=text],input[type=number]{width:100%;padding:10px;border:1px solid #26313a;border-radius:10px;background:#0f1216;color:#e8edf2}
+    .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+    .btn{border:0;padding:10px 14px;border-radius:10px;background:#1f2833;color:#e8edf2;cursor:pointer}
+    .btn.accent{background:#61dafb;color:#0b0d10;font-weight:600}
+    .pill{display:inline-block;padding:2px 8px;border-radius:999px;background:#0f1216;border:1px solid #26313a;font-size:12px;color:#9aa7b2}
+    .spacer{height:12px}
+    pre,code{background:#0f1216;color:#d7e6f5;border-radius:10px;padding:10px;overflow:auto}
+    table{width:100%;border-collapse:collapse;margin-top:10px}
+    th,td{text-align:left;border-bottom:1px solid #273342;padding:8px 6px;vertical-align:top}
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Tester OData Pagination</h1>
+
+  <div class="card">
+    <div class="grid two">
+      <div>
+        <label>Endpoint OData (colección paginada)</label>
+        <input id="endpoint" type="text" placeholder="http://localhost:9102/api/order/process-order-paged" />
+        <div style="font-size:12px;color:#9aa7b2">Ideal: servir este HTML desde el mismo backend para evitar CORS.</div>
+      </div>
+      <div class="grid two">
+        <div>
+          <label>$top</label>
+          <input id="top" type="number" min="1" value="25" />
+        </div>
+        <div>
+          <label>$skip</label>
+          <input id="skip" type="number" min="0" value="0" />
+        </div>
+        <div>
+          <label>$count</label>
+          <div class="row"><input id="count" type="checkbox" /><span style="font-size:12px;color:#9aa7b2">incluir @odata.count</span></div>
+        </div>
+        <div>
+          <label>$orderby</label>
+          <input id="orderby" type="text" placeholder="plannedStart desc, id asc" />
+        </div>
+      </div>
+    </div>
+
+    <div class="spacer"></div>
+    <div class="grid two">
+      <div>
+        <label>Prefer: odata.maxpagesize</label>
+        <input id="preferMax" type="number" min="1" placeholder="(opcional)" />
+      </div>
+      <div>
+        <label>Parámetros adicionales</label>
+        <input id="extra" type="text" placeholder="status=finished&plannedStart=2025-01-01T00:00:00Z&plannedFinish=2025-12-31T23:59:59Z" />
+      </div>
+    </div>
+
+    <div class="spacer"></div>
+    <div class="row">
+      <label class="row" style="gap:6px">
+        <input id="sendODataHeaders" type="checkbox" />
+        <span style="font-size:12px;color:#9aa7b2">Enviar cabeceras OData (OData-Version / OData-MaxVersion)</span>
+      </label>
+    </div>
+
+    <div class="spacer"></div>
+    <div class="row">
+      <button id="btnLoad" class="btn accent">Cargar</button>
+      <button id="btnPrev" class="btn" disabled>Prev</button>
+      <button id="btnNext" class="btn" disabled>Next</button>
+      <span id="status" class="pill">—</span>
+    </div>
+  </div>
+
+  <div class="spacer"></div>
+
+  <div class="grid cols">
+    <div class="card">
+      <div class="row" style="justify-content:space-between">
+        <div>
+          <span class="pill" id="metaCount">count: —</span>
+          <span class="pill" id="metaNext">nextLink: —</span>
+        </div>
+        <span class="pill" id="reqUrl">URL: —</span>
+      </div>
+      <div id="tableHost"></div>
+    </div>
+
+    <div class="card">
+      <div class="row" style="justify-content:space-between">
+        <strong>Respuesta / Errores</strong>
+        <span class="pill" id="headersPill">headers: —</span>
+      </div>
+      <pre id="raw" style="max-height:420px"></pre>
+    </div>
+  </div>
+</div>
+
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  let historyStack = [];
+  let currentUrl = null;
+  let lastPageSize = 25;
+  let _lastJson = null;
+
+  function buildUrl() {
+    const base = $('endpoint').value.trim();
+    const u = new URL(base, window.location.origin);
+    ['$top','$skip','$count','$orderby','$skiptoken'].forEach(p => u.searchParams.delete(p));
+
+    const top = parseInt($('top').value || '25', 10);
+    const skip = parseInt($('skip').value || '0', 10);
+    const count = $('count').checked;
+    const orderby = $('orderby').value.trim();
+    const extra = $('extra').value.trim();
+
+    if (!isNaN(top) && top > 0) u.searchParams.set('$top', String(top));
+    if (!isNaN(skip) && skip >= 0) u.searchParams.set('$skip', String(skip));
+    if (count) u.searchParams.set('$count', 'true');
+    if (orderby) u.searchParams.set('$orderby', orderby);
+    if (extra) new URLSearchParams(extra).forEach((v,k)=>u.searchParams.set(k,v));
+
+    lastPageSize = top;
+    $('reqUrl').textContent = 'URL: ' + u.toString();
+    return u.toString();
+  }
+
+  async function fetchPage(url, preferMax, sendODataHeaders) {
+    $('status').textContent = 'Cargando...';
+    $('btnNext').disabled = true;
+
+    const headers = { 'Accept': 'application/json' }; // evitar preflight
+    if (sendODataHeaders) {
+      headers['OData-Version'] = '4.0';
+      headers['OData-MaxVersion'] = '4.0';
+    }
+    if (preferMax && preferMax > 0) headers['Prefer'] = `odata.maxpagesize=${preferMax}`;
+
+    try {
+      const res = await fetch(url, { headers, credentials: 'omit', cache: 'no-store', mode: 'cors' });
+      const text = await res.text();
+      let json; try { json = JSON.parse(text); } catch { json = { error: 'Respuesta no JSON', text }; }
+
+      const prefApplied = res.headers.get('Preference-Applied') || '—';
+      const odataVer = res.headers.get('OData-Version') || '—';
+      $('headersPill').textContent = `Preference-Applied=${prefApplied} · OData-Version=${odataVer}`;
+      $('raw').textContent = JSON.stringify(json, null, 2);
+
+      const nextLink = json['@odata.nextLink'] || json['@odata.nextlink'] || null;
+      $('metaNext').textContent = `nextLink: ${nextLink ? 'sí' : '—'}`;
+      const cnt = json['@odata.count'];
+      $('metaCount').textContent = `count: ${typeof cnt === 'number' ? cnt : '—'}`;
+
+      renderTable(json.value || []);
+      $('status').textContent = `OK · ${Array.isArray(json.value) ? json.value.length : 0} items`;
+      $('btnNext').disabled = !(nextLink || canComputeNext(json));
+
+      _lastJson = json;
+      return { json, nextLink };
+    } catch (err) {
+      $('status').textContent = 'ERROR';
+      $('raw').textContent = (err && err.message) ? `Fetch error: ${err.message}\n\nPosible CORS/preflight bloqueado por el navegador.` : 'Error de red';
+      throw err;
+    }
+  }
+
+  function renderTable(items){
+    const host = $('tableHost'); host.innerHTML='';
+    if (!items || !items.length){ host.innerHTML='<div style="color:#9aa7b2">Sin resultados.</div>'; return; }
+    const keys = Object.keys(items[0]);
+    const table = document.createElement('table');
+    const thead = document.createElement('thead');
+    const trh = document.createElement('tr');
+    keys.forEach(k=>{ const th=document.createElement('th'); th.textContent=k; trh.appendChild(th); });
+    thead.appendChild(trh); table.appendChild(thead);
+    const tbody = document.createElement('tbody');
+    items.forEach(it=>{
+      const tr=document.createElement('tr');
+      keys.forEach(k=>{ const td=document.createElement('td'); const v=it[k];
+        td.textContent = (v==null) ? '' : (typeof v==='object' ? JSON.stringify(v) : String(v)); tr.appendChild(td);
+      });
+      tbody.appendChild(tr);
+    });
+    table.appendChild(tbody); host.appendChild(table);
+  }
+
+  function canComputeNext(json){
+    const arr = Array.isArray(json.value) ? json.value : [];
+    const cnt = typeof json['@odata.count'] === 'number' ? json['@odata.count'] : null;
+    if (cnt == null) return false;
+    try {
+      const u = new URL(currentUrl);
+      const skip = parseInt(u.searchParams.get('$skip') || '0', 10);
+      return (skip + arr.length) < cnt;
+    } catch { return false; }
+  }
+  function computeNextUrl(json){
+    const u = new URL(currentUrl);
+    const skip = parseInt(u.searchParams.get('$skip') || '0', 10);
+    const top = parseInt(u.searchParams.get('$top') || String(lastPageSize), 10);
+    u.searchParams.set('$skip', String(skip + top));
+    $('reqUrl').textContent = 'URL: ' + u.toString();
+    return u.toString();
+  }
+
+  $('btnLoad').addEventListener('click', async ()=>{
+    historyStack = [];
+    currentUrl = buildUrl();
+    const preferMax = parseInt(($('preferMax').value || '').trim(), 10);
+    const sendODataHeaders = $('sendODataHeaders').checked;
+    try {
+      await fetchPage(currentUrl, isNaN(preferMax)?null:preferMax, sendODataHeaders);
+      $('btnPrev').disabled = true;
+    } catch { /* ya mostrado en UI */ }
+  });
+
+  $('btnNext').addEventListener('click', async ()=>{
+    if (!currentUrl) return;
+    historyStack.push(currentUrl);
+    const preferMax = parseInt(($('preferMax').value || '').trim(), 10);
+    const sendODataHeaders = $('sendODataHeaders').checked;
+    const nextUrl = (_lastJson && (_lastJson['@odata.nextLink'] || _lastJson['@odata.nextlink'])) || computeNextUrl(_lastJson||{value:[]});
+    currentUrl = nextUrl;
+    try {
+      await fetchPage(currentUrl, isNaN(preferMax)?null:preferMax, sendODataHeaders);
+      $('btnPrev').disabled = historyStack.length === 0;
+    } catch { /* mostrado */ }
+  });
+
+  $('btnPrev').addEventListener('click', async ()=>{
+    if (historyStack.length===0) return;
+    const preferMax = parseInt(($('preferMax').value || '').trim(), 10);
+    const sendODataHeaders = $('sendODataHeaders').checked;
+    currentUrl = historyStack.pop();
+    try {
+      await fetchPage(currentUrl, isNaN(preferMax)?null:preferMax, sendODataHeaders);
+      $('btnPrev').disabled = historyStack.length === 0;
+    } catch { /* mostrado */ }
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,11 @@
+{
+  "name": "GET /odata/Workflows with $top/$skip",
+  "method": "GET",
+  "path": "/odata/Workflows",
+  "query": { "$top": 5, "$skip": 0 },
+  "expect": {
+    "status": 200,
+    "bodyType": "OBJECT",
+    "requiredJsonPaths": ["value"]
+  }
+}

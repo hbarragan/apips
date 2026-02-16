@@ -1,0 +1,13 @@
+{
+  "name": "GET /api/order/process-order/details with valid numeric key",
+  "method": "GET",
+  "path": "/api/order/process-order/details",
+  "query": {
+    "key": 1
+  },
+  "expect": {
+    "status": 200,
+    "bodyType": "OBJECT",
+    "requiredJsonPaths": ["key"]
+  }
+}

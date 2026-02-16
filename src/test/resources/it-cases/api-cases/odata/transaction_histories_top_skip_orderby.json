@@ -1,0 +1,15 @@
+{
+  "name": "GET /odata/TransactionHistories with $top/$skip/$orderby",
+  "method": "GET",
+  "path": "/odata/TransactionHistories",
+  "query": {
+    "$orderby": "time desc",
+    "$top": 5,
+    "$skip": 0
+  },
+  "expect": {
+    "status": 200,
+    "bodyType": "OBJECT",
+    "requiredJsonPaths": ["value"]
+  }
+}

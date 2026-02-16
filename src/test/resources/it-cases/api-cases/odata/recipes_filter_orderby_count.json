@@ -1,0 +1,16 @@
+{
+  "name": "GET /odata/Recipes filter+orderby+count",
+  "method": "GET",
+  "path": "/odata/Recipes",
+  "query": {
+    "$filter": "key ne null",
+    "$orderby": "creationDate desc",
+    "$count": true,
+    "$top": 5
+  },
+  "expect": {
+    "status": 200,
+    "bodyType": "OBJECT",
+    "requiredJsonPaths": ["value", "$['@odata.count']"]
+  }
+}

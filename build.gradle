@@ -1,0 +1,387 @@
+
+plugins {
+    id 'base'
+    id 'java'
+    id 'org.springframework.boot' version '4.0.0'
+
+    id 'io.spring.dependency-management' version '1.1.7'
+
+    id 'org.springdoc.openapi-gradle-plugin' version '1.9.0' apply false // Solo para ps10
+}
+
+
+group = 'com.adasoft'
+version = '1.1.1.0'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+    all {
+        exclude group: "org.springframework.boot", module: "spring-boot-starter-logging"
+        exclude group: "ch.qos.logback", module: "logback-classic"
+        exclude group: "ch.qos.logback", module: "logback-core"
+        exclude group: "org.slf4j", module: "slf4j-log4j12"
+
+    }
+    configureEach {
+        resolutionStrategy {
+            failOnVersionConflict()
+            force 'com.google.errorprone:error_prone_annotations:2.27.0',
+                    'org.checkerframework:checker-qual:3.43.0'
+        }
+    }
+}
+
+
+
+if (!project.hasProperty('apiVersion')) {
+    println "Debes indicar -PapiVersion=ps10 o ps11, si no lo indicas defecto se usara ps11"
+}
+
+def psSpecificDependencies = []
+def psCommonExcludes = []
+def pathLibPs10 = 'C:/Adasoft/libs/ps10Api/libs'
+def pathLibPs11 = 'C:/Adasoft/libs/ps11Api/dependencies'
+def apiVersion = project.findProperty('apiVersion') ?: 'ps11'
+def isPs10 = apiVersion == 'ps10'
+def isPs11 = apiVersion == 'ps11'
+def psLibDir = isPs10
+        ? pathLibPs10
+        : pathLibPs11
+
+ext {
+    adaArchiveName = project.name
+    adaArchiveVersion = project.version
+}
+
+if (isPs10) {
+    apply plugin: 'org.springdoc.openapi-gradle-plugin'
+}
+
+repositories {
+    mavenCentral()
+    flatDir {
+        dirs psLibDir
+    }
+}
+
+switch (apiVersion) {
+    case 'ps10':
+        psSpecificDependencies += ["org.apache.logging.log4j:log4j-1.2-api"]
+        psCommonExcludes = [
+                'byte-buddy*.jar',
+                'byte-buddy-agent*.jar',
+                'mockito*.jar',
+                'objenesis*.jar',
+                'slf4j-*.jar',
+                'log4j*.jar',
+                'logback-*.jar', 'reload4j-*.jar',
+                'activemq-all-*.jar', 'xbean-spring-*.jar',
+                'spring-*.jar', 'springframework-*.jar',
+                'jackson-*.jar',
+                'commons-logging*.jar',
+                'quartz-*.jar',
+                'groovy-all-*.jar',
+                'groovy-*.jar',
+                'spring-*.jar',
+                'springframework-*.jar',
+                'spring-boot-*.jar',
+                'jboss-logging-*.jar'
+        ]
+        break
+
+    case 'ps11':
+        psSpecificDependencies += ["org.apache.logging.log4j:log4j-jcl:2.20.0"]
+        psCommonExcludes = [
+                'byte-buddy*.jar',
+                'byte-buddy-agent*.jar',
+                'mockito*.jar',
+                'objenesis*.jar',
+                'slf4j-reload4j-1.7.36.jar',
+                'slf4j-api-1.7.32.redhat-00001.jar',
+                'log4j*.jar',
+                'logback-classic-*.jar',
+                'jackson-*.jar',
+                'reload4j-1.2.19.jar',
+                'logback-core-*.jar',
+                'groovy-*.jar',
+                'spring-*.jar',
+                'springframework-*.jar',
+                'spring-boot-*.jar',
+                'jboss-logging-*.jar'
+        ]
+        break
+}
+
+dependencies {
+    /* ===== SPRING COMÚN ===== */
+    implementation "org.springframework.boot:spring-boot-starter-web"
+    implementation "org.springframework.boot:spring-boot-starter-tomcat"
+    implementation "org.springframework.boot:spring-boot-starter-log4j2"
+    implementation "org.springframework.boot:spring-boot-starter-websocket"
+    implementation "org.springframework.boot:spring-boot-starter-quartz"
+    implementation "org.springframework.boot:spring-boot-starter-actuator"
+    implementation "org.springframework.boot:spring-boot-starter-activemq"
+    implementation "org.springframework.boot:spring-boot-starter-security"
+    implementation "org.springframework.boot:spring-boot-starter-oauth2-client"
+    implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
+    implementation "org.apache.olingo:odata-server-core:5.0.0"
+    implementation "org.apache.olingo:odata-commons-core:5.0.0"
+    implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:3.0.0"
+    implementation "com.google.code.gson:gson"
+    // Servidor MCP 100% SDK (WebMVC SSE)
+    implementation "io.modelcontextprotocol.sdk:mcp-spring-webmvc:0.17.2"
+
+    // Spring AI SOLO para @Tool + generar/convertir specs
+    implementation "org.springframework.ai:spring-ai-mcp:2.0.0-M2"
+    implementation "org.springframework.ai:spring-ai-model:2.0.0-M2"
+
+    /* ===== DEPENDENCIAS PS ===== */
+    psSpecificDependencies.each {
+        implementation it
+    }
+
+    /* ===== LOMBOK ===== */
+    compileOnly "org.projectlombok:lombok:1.18.30"
+    annotationProcessor "org.projectlombok:lombok:1.18.30"
+    testCompileOnly "org.projectlombok:lombok:1.18.30"
+    testAnnotationProcessor "org.projectlombok:lombok:1.18.30"
+
+    /* ===== TEST ===== */
+    testImplementation("org.springframework.boot:spring-boot-starter-test") {
+        exclude group: "org.springframework.boot", module: "spring-boot-starter-logging"
+        exclude group: "ch.qos.logback", module: "logback-classic"
+        exclude group: "ch.qos.logback", module: "logback-core"
+        exclude group: "org.junit.vintage", module: "junit-vintage-engine"
+    }
+    testRuntimeOnly "org.junit.platform:junit-platform-launcher"
+
+    /* ===== LIBS LOCALES PS ===== */
+    implementation files(
+            fileTree(
+                    dir: psLibDir,
+                    include: ['*.jar'],
+                    exclude: psCommonExcludes
+            )
+    )
+}
+
+// Fuerza TODOS los módulos io.modelcontextprotocol.sdk a 0.17.2
+configurations.configureEach {
+    resolutionStrategy.eachDependency { details ->
+        if (details.requested.group == "io.modelcontextprotocol.sdk") {
+            details.useVersion "0.17.2"
+            details.because "Force MCP SDK 0.17.2 (Spring AI brings 0.17.1 transitively)"
+        }
+    }
+}
+
+
+tasks.named('bootRun') {
+
+    doFirst {
+        if (isPs10) {
+            println "Ejecutando bootRun ps10"
+
+            def compatPattern = ~/adasoft-api-backport-.*\.jar/
+            def compat = configurations.runtimeClasspath
+                    .resolve()
+                    .find { it.name ==~ compatPattern }
+
+            if (!compat) {
+                throw new GradleException(
+                        "No se encontró adasoft-api-backport-*.jar en runtimeClasspath"
+                )
+            }
+
+            jvmArgs(
+                    '--patch-module', "jdk.unsupported=${compat.absolutePath}",
+                    '--add-opens=java.management/sun.management=ALL-UNNAMED'
+            )
+
+            systemProperty 'java.awt.headless', 'true'
+        }
+
+        if (isPs11) {
+            println "Ejecutando bootRun ps11"
+        }
+
+        systemProperty(
+                "org.springframework.boot.logging.LoggingSystem",
+                "org.springframework.boot.logging.log4j2.Log4J2LoggingSystem"
+        )
+    }
+}
+
+tasks.test {
+    useJUnitPlatform()
+}
+
+tasks.register('verifyStaticOpenApi') {
+    onlyIf { isPs10 }
+    doLast {
+        def yaml = file('src/main/resources/ps10/static/openapi.yaml')
+        def cfg  = file('src/main/resources/ps10/application-springdoc.yml')
+
+        if (!yaml.exists())
+            throw new GradleException("Falta src/main/resources/ps10/static/openapi.yaml")
+        if (!cfg.exists())
+            throw new GradleException("Falta src/main/resources/ps10/application-springdoc.yml")
+    }
+}
+
+tasks.named('processResources', Copy) {
+
+    if (isPs10) {
+        from('src/main/resources/ps10') {into ''}
+        dependsOn 'verifyStaticOpenApi'
+    }
+
+    if (isPs11) {
+        exclude('ps10/**')
+    }
+}
+
+
+/* =========================================================
+   JAR
+   ========================================================= */
+
+tasks.withType(Jar).configureEach {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+tasks.register('deployJar', Copy) {
+    dependsOn tasks.named('bootJar')
+    from("$buildDir/libs")
+    include("${adaArchiveName}-${adaArchiveVersion}-${apiVersion}.jar")
+    into "$rootDir/doc/deploy/SymcontPharmasuiteAPI/app/lib/${apiVersion}"
+}
+
+
+deployJar.doLast {
+    println ">>> JAR copiado en doc/deploy para ${apiVersion}"
+}
+
+tasks.named('build') {
+    finalizedBy tasks.named('deployJar')
+}
+
+bootJar {
+    archiveBaseName.set(adaArchiveName)
+    archiveVersion.set("${adaArchiveVersion}-${apiVersion}")
+}
+
+jar {
+    enabled = false
+}
+
+sourceSets {
+    main {
+        java.srcDirs = ['src/main/java']
+        resources.srcDirs = ['src/main/resources']
+    }
+}
+
+
+/* =========================================================
+   CUSTOM DEPLOY TASKS
+   ========================================================= */
+
+tasks.register('cleanDeploy') {
+    group = 'build'
+    description = 'Borra jars y yml de doc/deploy'
+
+    doFirst {
+        println ">>> Borrando application y jars (${apiVersion})"
+    }
+
+    doLast {
+        try {
+            delete fileTree("$rootDir/doc/deploy/SymcontPharmasuiteAPI/app/lib/ps10") {
+                include '*.jar', '*.yml', '*.xml'
+            }
+            delete fileTree("$rootDir/doc/deploy/SymcontPharmasuiteAPI/app/lib/ps11") {
+                include '*.jar', '*.yml', '*.xml'
+            }
+            delete fileTree("$rootDir/doc/deploy") {
+                include '*.7z', '*.jar'
+            }
+            delete "$rootDir/doc/deploy/SymcontPharmasuiteAPI/runtime"
+        } catch (Exception e) {
+            logger.warn("No se pudo borrar deploy (probablemente carpeta en uso). Continuando build.")
+        }
+    }
+}
+
+tasks.register('copyDevYaml', Copy) {
+    group = 'build'
+    description = 'Copia application-dev.yml a los dos destinos'
+
+    from('src/main/resources') {
+        include 'application-dev.yml', 'ct-Customer-config.xml', 'custConfig.xml', 'log4j2.xml'
+    }
+    into("$rootDir/doc/deploy/SymcontPharmasuiteAPI/app/lib/ps10")
+}
+
+tasks.named('copyDevYaml').configure {
+    doLast {
+        copy {
+            from('src/main/resources') {
+                include 'application-dev.yml', 'ct-Customer-config.xml', 'custConfig.xml', 'log4j2.xml'
+            }
+            into("$rootDir/doc/deploy/SymcontPharmasuiteAPI/app/lib/ps11")
+        }
+        println ">>> Copiados application-dev.yml a ps10 y ps11"
+    }
+}
+
+
+tasks.register('createExe', Exec) {
+    group = "build"
+    description = "Ejecuta el instalador install-builder.bat"
+    workingDir "$rootDir/doc/deploy/SymcontPharmasuiteAPI"
+    commandLine 'cmd', '/c', 'install-builder.bat'
+}
+
+tasks.register('packageDeploy7z', Exec) {
+    group = 'build'
+    description = 'Empaqueta doc/deploy/SymcontPharmasuiteAPI en 7z'
+
+    def sevenZip = 'C:/Program Files/7-Zip/7z.exe'
+    def versionNoDots = project.version.toString().replace('.', '')
+    def archiveName = "SymcontPharmasuiteAPI-PS11-${versionNoDots}_INTERNAL.7z"
+
+    doFirst {
+        if (!file(sevenZip).exists()) {
+            throw new GradleException("No se encuentra 7z.exe en: ${sevenZip}")
+        }
+        if (!file("$rootDir/doc/deploy/SymcontPharmasuiteAPI/").exists()) {
+            throw new GradleException("No existe doc/deploy")
+        }
+    }
+    workingDir "$rootDir/doc/deploy"
+    commandLine sevenZip, 'a', archiveName, 'SymcontPharmasuiteAPI'
+}
+
+tasks.named('test', Test) {
+    useJUnitPlatform()
+
+    // Perfil de Spring para tests
+    systemProperty "spring.profiles.active", "it"
+
+    // JVM -D (truststore)
+    systemProperty "javax.net.ssl.trustStore", project.findProperty("trustStore") ?: "C:/Adasoft/certs/SERVER144.p12"
+    systemProperty "javax.net.ssl.trustStorePassword", project.findProperty("trustStorePassword") ?: "RoviEbr1984"
+    systemProperty "javax.net.ssl.trustStoreType", project.findProperty("trustStoreType") ?: "PKCS12"
+
+    // --add-opens (si lo necesitas también en tests)
+    jvmArgs "--add-opens=java.base/java.lang=ALL-UNNAMED"
+}

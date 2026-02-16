@@ -1,0 +1,16 @@
+{
+  "name": "GET /odata/Workflows filter+orderby+count",
+  "method": "GET",
+  "path": "/odata/Workflows",
+  "query": {
+    "$filter": "key ne null",
+    "$orderby": "creationDate desc",
+    "$count": true,
+    "$top": 5
+  },
+  "expect": {
+    "status": 200,
+    "bodyType": "OBJECT",
+    "requiredJsonPaths": ["value", "$['@odata.count']"]
+  }
+}

@@ -1,0 +1,14 @@
+springdoc:
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+    disable-swagger-default-url: true
+    display-query-params-without-oauth2: true
+    display-request-duration: true
+
+spring:
+  main:
+    lazy-initialization: true

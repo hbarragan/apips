@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    
+    <!-- Console Appender con formato mejorado -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Appender específico para HttpCaseRunner con formato especial -->
+    <appender name="TEST_RESULTS" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <!-- Sin formato extra, solo el mensaje (los mensajes ya incluyen formato visual) -->
+            <pattern>%msg%n</pattern>
+        </encoder>
+        <!-- Asegurar que se procesen todos los niveles -->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>DEBUG</level>
+        </filter>
+    </appender>
+
+    <!-- Logger específico para los resultados de tests HTTP -->
+    <!-- DEBUG para ver toda la información, INFO para solo ver resultados, WARN para solo errores -->
+    <logger name="com.adasoft.tomcat.integration.common.HttpCaseRunner" level="DEBUG" additivity="false">
+        <appender-ref ref="TEST_RESULTS" />
+    </logger>
+
+    <!-- Silenciar logs de Spring durante los tests -->
+    <logger name="org.springframework" level="WARN"/>
+    <logger name="org.springframework.boot" level="INFO"/>
+    <logger name="org.springframework.test" level="INFO"/>
+    
+    <!-- Logs de la aplicación -->
+    <logger name="com.adasoft" level="INFO"/>
+
+    <!-- Root logger -->
+    <root level="INFO">
+        <appender-ref ref="CONSOLE" />
+    </root>
+    
+</configuration>

@@ -1,0 +1,907 @@
+{
+  "yaakVersion": "2026.1.2",
+  "yaakSchema": 4,
+  "timestamp": "2026-02-12T14:17:06.793811700",
+  "resources": {
+    "workspaces": [
+      {
+        "model": "workspace",
+        "id": "wk_GmNQMciVNJ",
+        "createdAt": "2025-10-21T16:25:01.680599800",
+        "updatedAt": "2025-10-21T16:25:01.680600500",
+        "authentication": {},
+        "authenticationType": null,
+        "description": "# 🚀 Get started here\n\nThis template guides you through CRUD operations (GET, POST, PUT, DELETE), variables, and tests.\n\n## 🔖 **How to use this template**\n\n#### **Step 1: Send requests**\n\nRESTful APIs allow you to perform CRUD operations using the POST, GET, PUT, and DELETE HTTP methods.\n\nThis collection contains each of these [request](https://learning.postman.com/docs/sending-requests/requests/) types. Open each request and click \"Send\" to see what happens.\n\n#### **Step 2: View responses**\n\nObserve the response tab for status code (200 OK), response time, and size.\n\n#### **Step 3: Send new Body data**\n\nUpdate or add new data in \"Body\" in the POST request. Typically, Body data is also used in PUT request.\n\n```\n{\n    \"name\": \"Add your name in the body\"\n}\n\n ```\n\n#### **Step 4: Update the variable**\n\nVariables enable you to store and reuse values in Postman. We have created a [variable](https://learning.postman.com/docs/sending-requests/variables/) called `base_url` with the sample request [https://postman-api-learner.glitch.me](https://postman-api-learner.glitch.me). Replace it with your API endpoint to customize this collection.\n\n#### **Step 5: Add tests in the \"Scripts\" tab**\n\nAdding tests to your requests can help you confirm that your API is working as expected. You can write test scripts in JavaScript and view the output in the \"Test Results\" tab.\n\n<img src=\"https://content.pstmn.io/fa30ea0a-373d-4545-a668-e7b283cca343/aW1hZ2UucG5n\" width=\"2162\" height=\"1530\">\n\n## 💪 Pro tips\n\n- Use folders to group related requests and organize the collection.\n    \n- Add more [scripts](https://learning.postman.com/docs/writing-scripts/intro-to-scripts/) to verify if the API works as expected and execute workflows.\n    \n\n## 💡Related templates\n\n[API testing basics](https://go.postman.co/redirect/workspace?type=personal&collectionTemplateId=e9a37a28-055b-49cd-8c7e-97494a21eb54&sourceTemplateId=ddb19591-3097-41cf-82af-c84273e56719)  \n[API documentation](https://go.postman.co/redirect/workspace?type=personal&collectionTemplateId=e9c28f47-1253-44af-a2f3-20dce4da1f18&sourceTemplateId=ddb19591-3097-41cf-82af-c84273e56719)  \n[Authorization methods](https://go.postman.co/redirect/workspace?type=personal&collectionTemplateId=31a9a6ed-4cdf-4ced-984c-d12c9aec1c27&sourceTemplateId=ddb19591-3097-41cf-82af-c84273e56719)",
+        "headers": [],
+        "name": "Api PS",
+        "encryptionKeyChallenge": null,
+        "settingValidateCertificates": true,
+        "settingFollowRedirects": true,
+        "settingRequestTimeout": 0,
+        "settingDnsOverrides": []
+      }
+    ],
+    "environments": [
+      {
+        "model": "environment",
+        "id": "ev_ZLJJMpTktv",
+        "workspaceId": "wk_GmNQMciVNJ",
+        "createdAt": "2025-10-21T16:25:01.685679500",
+        "updatedAt": "2025-12-24T12:27:09.674865300",
+        "name": "Global Variables",
+        "public": false,
+        "base": true,
+        "parentModel": "workspace",
+        "parentId": null,
+        "variables": [
+          {
+            "enabled": true,
+            "name": "id",
+            "value": "1",
+            "id": "Sekya3rZdS"
+          },
+          {
+            "enabled": true,
+            "name": "base_url",
+            "value": "http://192.168.5.19:9102",
+            "id": "mTDUA6UEbW"
+          },
+          {
+            "enabled": true,
+            "name": "base_url_mock",
+            "value": "http://localhost:9102",
+            "id": "5MKSvcfchN"
+          }
+        ],
+        "color": null,
+        "sortPriority": 0.0
+      }
+    ],
+    "folders": [
+      {
+        "model": "folder",
+        "id": "fl_UM2rBf6S2Y",
+        "createdAt": "2026-02-12T14:10:51.220324",
+        "updatedAt": "2026-02-12T14:10:51.220324",
+        "workspaceId": "wk_GmNQMciVNJ",
+        "folderId": "fl_PvUgVSx2qm",
+        "authentication": {},
+        "authenticationType": null,
+        "description": "OData endpoints (+ queries) to validate metadata, paging, filtering and ordering.",
+        "headers": [],
+        "name": "ODATA",
+        "sortPriority": 1000.1
+      },
+      {
+        "model": "folder",
+        "id": "fl_l8vo45z6ZJ",
+        "createdAt": "2026-02-12T14:10:51.220324",
+        "updatedAt": "2026-02-12T14:10:51.220324",
+        "workspaceId": "wk_GmNQMciVNJ",
+        "folderId": "fl_PvUgVSx2qm",
+        "authentication": {},
+        "authenticationType": null,
+        "description": "Detail endpoints (non-OData).",
+        "headers": [],
+        "name": "DETAIL",
+        "sortPriority": 1000.2
+      },
+      {
+        "model": "folder",
+        "id": "fl_GUrq6kTB8W",
+        "createdAt": "2025-12-10T22:07:20.022970500",
+        "updatedAt": "2025-12-10T22:07:32.062887700",
+        "workspaceId": "wk_GmNQMciVNJ",
+        "folderId": null,
+        "authentication": {},
+        "authenticationType": null,
+        "description": "",
+        "headers": [],
+        "name": "PS-Tomcat-APIGW",
+        "sortPriority": -1765404440021.0
+      },
+      {
+        "model": "folder",
+        "id": "fl_PvUgVSx2qm",
+        "createdAt": "2025-12-10T21:21:23.261295800",
+        "updatedAt": "2025-12-10T22:07:43.355319400",
+        "workspaceId": "wk_GmNQMciVNJ",
+        "folderId": null,
+        "authentication": {},
+        "authenticationType": null,
+        "description": "",
+        "headers": [],
+        "name": "PS-API",
+        "sortPriority": 1000.0
+      }
+    ],
+    "httpRequests": [
+      {
+        "model": "http_request",
+        "id": "rq_OAKwK8XncI",
+        "createdAt": "2026-02-12T14:10:51.220324",
+        "updatedAt": "2026-02-12T14:14:31.986398",
+        "workspaceId": "wk_GmNQMciVNJ",
+        "folderId": "fl_UM2rBf6S2Y",
+        "authentication": {},
+        "authenticationType": null,
+        "body": {},
+        "bodyType": null,
+        "description": "Should return 200 + JSON service document. Accept header mimics PowerQuery/Excel.",
+        "headers": [
+          {
+            "enabled": true,
+            "name": "Accept",
+            "value": "application/json;odata.metadata=minimal;q=1.0,application/json;odata=minimalmetadata;q=0.9,application/atomsvc+xml;q=0.8,application/atom+xml;q=0.8,application/xml;q=0.7,text/plain;q=0.7",
+            "id": null
+          }
+        ],
+        "method": "GET",
+        "name": "odata - service document",
+        "sortPriority": 1.0,
+        "url": "${[base_url_mock]}/odata",
+        "urlParameters": []
+      },
+      {
+        "model": "http_request",
+        "id": "rq_iFWu5lgmGo",
+        "createdAt": "2026-02-12T14:10:51.220324",
+        "updatedAt": "2026-02-12T14:10:51.220324",
+        "workspaceId": "wk_GmNQMciVNJ",
+        "folderId": "fl_UM2rBf6S2Y",
+        "authentication": {},
+        "authenticationType": null,
+        "body": {},
+        "bodyType": null,
+        "description": "Should return 200 + EDMX (XML metadata).",
+        "headers": [
+          {
+            "enabled": true,
+            "name": "Accept",
+            "value": "application/xml",
+            "id": null
+          }
+        ],
+        "method": "GET",
+        "name": "odata - $metadata",
+        "sortPriority": 2.0,
+        "url": "${[base_url_mock]}/odata/$metadata",
+        "urlParameters": []
+      },
+      {
+        "model": "http_request",
+        "id": "rq_zrXyNKRcZH",
+        "createdAt": "2026-02-12T14:10:51.220324",
+        "updatedAt": "2026-02-12T14:10:51.220324",
+        "workspaceId": "wk_GmNQMciVNJ",
+        "folderId": "fl_UM2rBf6S2Y",
+        "authentication": {},
+        "authenticationType": null,
+        "body": {},
+        "bodyType": null,
+        "description": "Paging: first page.",
+        "headers": [
+          {
+            "enabled": true,
+            "name": "Accept",
+            "value": "application/json;odata.metadata=minimal",
+            "id": null
+          }
+        ],
+        "method": "GET",
+        "name": "odata - Batches (page 1)",
+        "sortPriority": 3.0,
+        "url": "${[base_url_mock]}/odata/Batches",
+        "urlParameters": [
+          {
+            "enabled": true,
+            "name": "$top",
+            "value": "20",
+            "id": "YAcpWoxS2D"
+          },
+          {
+            "enabled": true,
+            "name": "$skip",
+            "value": "0",
+            "id": "4QckO78kUe"
+          },
+          {
+            "enabled": true,
+            "name": "$count",
+            "value": "true",
+            "id": "x9pirvBgvh"
+          }
+        ]
+      },
+      {
+        "model": "http_request",
+        "id": "rq_l6sGqY1wCb",
+        "createdAt": "2026-02-12T14:10:51.220324",
+        "updatedAt": "2026-02-12T14:10:51.220324",
+        "workspaceId": "wk_GmNQMciVNJ",
+        "folderId": "fl_UM2rBf6S2Y",
+        "authentication": {},
+        "authenticationType": null,
+        "body": {},
+        "bodyType": null,
+        "description": "Paging: second page.",
+        "headers": [
+          {
+            "enabled": true,
+            "name": "Accept",
+            "value": "application/json;odata.metadata=minimal",
+            "id": null
+          }
+        ],
+        "method": "GET",
+        "name": "odata - Batches (page 2)",
+        "sortPriority": 4.0,
+        "url": "${[base_url_mock]}/odata/Batches",
+        "urlParameters": [
+          {
+            "enabled": true,
+            "name": "$top",
+            "value": "20",
+            "id": "n16IjRkqCP"
+          },
+          {
+            "enabled": true,
+            "name": "$skip",
+            "value": "20",
+            "id": "9bFMVhRTaX"
+          },
+          {
+            "enabled": true,
+            "name": "$count",
+            "value": "true",
+            "id": "TOCAn5MJBY"
+          }
+        ]
+      },
+      {
+        "model": "http_request",
+        "id": "rq_Ha8vrJMY9j",
+        "createdAt": "2026-02-12T14:10:51.220324",
+        "updatedAt": "2026-02-12T14:10:51.220324",
+        "workspaceId": "wk_GmNQMciVNJ",
+        "folderId": "fl_UM2rBf6S2Y",
+        "authentication": {},
+        "authenticationType": null,
+        "body": {},
+        "bodyType": null,
+        "description": "Ordering + paging.",
+        "headers": [
+          {
+            "enabled": true,
+            "name": "Accept",
+            "value": "application/json;odata.metadata=minimal",
+            "id": null
+          }
+        ],
+        "method": "GET",
+        "name": "odata - Batches (orderby key asc)",
+        "sortPriority": 5.0,
+        "url": "${[base_url_mock]}/odata/Batches",
+        "urlParameters": [
+          {
+            "enabled": true,
+            "name": "$top",
+            "value": "20",
+            "id": "7Fpwa1BzEy"
+          },
+          {
+            "enabled": true,
+            "name": "$skip",
+            "value": "0",
+            "id": "YVxF8xpeVV"
+          },
+          {
+            "enabled": true,
+            "name": "$count",
+            "value": "true",
+            "id": "i9PWdMdntC"
+          },
+          {
+            "enabled": true,
+            "name": "$orderby",
+            "value": "key asc",
+            "id": "hme1rFJg3H"
+          }
+        ]
+      },
+      {
+        "model": "http_request",
+        "id": "rq_4XUsds7YYh",
+        "createdAt": "2026-02-12T14:10:51.220324",
+        "updatedAt": "2026-02-12T14:10:51.220324",
+        "workspaceId": "wk_GmNQMciVNJ",
+        "folderId": "fl_UM2rBf6S2Y",
+        "authentication": {},
+        "authenticationType": null,
+        "body": {},
+        "bodyType": null,
+        "description": "Filtering: adjust value if your dataset differs.",
+        "headers": [
+          {
+            "enabled": true,
+            "name": "Accept",
+            "value": "application/json;odata.metadata=minimal",
+            "id": null
+          }
+        ],
+        "method": "GET",
+        "name": "odata - Batches (filter status eq 'Blocked')",
+        "sortPriority": 6.0,
+        "url": "${[base_url_mock]}/odata/Batches",
+        "urlParameters": [
+          {
+            "enabled": true,
+            "name": "$top",
+            "value": "20",
+            "id": "rKx0ltXMaQ"
+          },
+          {
+            "enabled": true,
+            "name": "$skip",
+            "value": "0",
+            "id": "d5NAoZSJte"
+          },
+          {
+            "enabled": true,
+            "name": "$count",
+            "value": "true",
+            "id": "yeALXM9pz9"
+          },
+          {
+            "enabled": true,
+            "name": "$filter",
+            "value": "status eq 'Blocked'",
+            "id": "4ix8vI8k1E"
+          }
+        ]
+      },
+      {
+        "model": "http_request",
+        "id": "rq_qmoipIzh78",
+        "createdAt": "2026-02-12T14:10:51.220324",
+        "updatedAt": "2026-02-12T14:10:51.220324",
+        "workspaceId": "wk_GmNQMciVNJ",
+        "folderId": "fl_UM2rBf6S2Y",
+        "authentication": {},
+        "authenticationType": null,
+        "body": {},
+        "bodyType": null,
+        "description": "Select a stable subset of columns (useful for Excel).",
+        "headers": [
+          {
+            "enabled": true,
+            "name": "Accept",
+            "value": "application/json;odata.metadata=minimal",
+            "id": null
+          }
+        ],
+        "method": "GET",
+        "name": "odata - Batches (select key,name,status,dates)",
+        "sortPriority": 7.0,
+        "url": "${[base_url_mock]}/odata/Batches",
+        "urlParameters": [
+          {
+            "enabled": true,
+            "name": "$top",
+            "value": "20",
+            "id": "xnwj5dvXLr"
+          },
+          {
+            "enabled": true,
+            "name": "$skip",
+            "value": "0",
+            "id": "LOnDI5XHsK"
+          },
+          {
+            "enabled": true,
+            "name": "$select",
+            "value": "key,name,status,creationTime,expiryDate,retestDate,productionDate,nextInspectionDate",
+            "id": "C8tm68iulN"
+          }
+        ]
+      },
+      {
+        "model": "http_request",
+        "id": "rq_MuJC7nxgUr",
+        "createdAt": "2026-02-12T14:10:51.220324",
+        "updatedAt": "2026-02-12T14:10:51.220324",
+        "workspaceId": "wk_GmNQMciVNJ",
+        "folderId": "fl_UM2rBf6S2Y",
+        "authentication": {},
+        "authenticationType": null,
+        "body": {},
+        "bodyType": null,
+        "description": "Recipes list.",
+        "headers": [
+          {
+            "enabled": true,
+            "name": "Accept",
+            "value": "application/json;odata.metadata=minimal",
+            "id": null
+          }
+        ],
+        "method": "GET",
+        "name": "odata - Recipes (page 1)",
+        "sortPriority": 8.0,
+        "url": "${[base_url_mock]}/odata/Recipes",
+        "urlParameters": [
+          {
+            "enabled": true,
+            "name": "$top",
+            "value": "20",
+            "id": "kfAC27VT5v"
+          },
+          {
+            "enabled": true,
+            "name": "$skip",
+            "value": "0",
+            "id": "DtFp7HvOrM"
+          },
+          {
+            "enabled": true,
+            "name": "$count",
+            "value": "true",
+            "id": "NcVPSanKLZ"
+          }
+        ]
+      },
+      {
+        "model": "http_request",
+        "id": "rq_vn7Z9s0KnS",
+        "createdAt": "2026-02-12T14:10:51.220324",
+        "updatedAt": "2026-02-12T14:10:51.220324",
+        "workspaceId": "wk_GmNQMciVNJ",
+        "folderId": "fl_UM2rBf6S2Y",
+        "authentication": {},
+        "authenticationType": null,
+        "body": {},
+        "bodyType": null,
+        "description": "Workflows list.",
+        "headers": [
+          {
+            "enabled": true,
+            "name": "Accept",
+            "value": "application/json;odata.metadata=minimal",
+            "id": null
+          }
+        ],
+        "method": "GET",
+        "name": "odata - Workflows (page 1)",
+        "sortPriority": 9.0,
+        "url": "${[base_url_mock]}/odata/Workflows",
+        "urlParameters": [
+          {
+            "enabled": true,
+            "name": "$top",
+            "value": "20",
+            "id": "yUyCOqEGBk"
+          },
+          {
+            "enabled": true,
+            "name": "$skip",
+            "value": "0",
+            "id": "UmTmTsdnRE"
+          },
+          {
+            "enabled": true,
+            "name": "$count",
+            "value": "true",
+            "id": "FZSZZQIJfI"
+          }
+        ]
+      },
+      {
+        "model": "http_request",
+        "id": "rq_7LWL8CbEEZ",
+        "createdAt": "2026-02-12T14:10:51.220324",
+        "updatedAt": "2026-02-12T14:10:51.220324",
+        "workspaceId": "wk_GmNQMciVNJ",
+        "folderId": "fl_UM2rBf6S2Y",
+        "authentication": {},
+        "authenticationType": null,
+        "body": {},
+        "bodyType": null,
+        "description": "TransactionHistories list.",
+        "headers": [
+          {
+            "enabled": true,
+            "name": "Accept",
+            "value": "application/json;odata.metadata=minimal",
+            "id": null
+          }
+        ],
+        "method": "GET",
+        "name": "odata - TransactionHistories (page 1)",
+        "sortPriority": 10.0,
+        "url": "${[base_url_mock]}/odata/TransactionHistories",
+        "urlParameters": [
+          {
+            "enabled": true,
+            "name": "$top",
+            "value": "20",
+            "id": "B37h2ULrmJ"
+          },
+          {
+            "enabled": true,
+            "name": "$skip",
+            "value": "0",
+            "id": "u97GzczD9T"
+          },
+          {
+            "enabled": true,
+            "name": "$count",
+            "value": "true",
+            "id": "M7Hftc1RZk"
+          }
+        ]
+      },
+      {
+        "model": "http_request",
+        "id": "rq_JitAV9vXUW",
+        "createdAt": "2025-12-23T14:34:02.541247600",
+        "updatedAt": "2026-02-12T14:10:51.220324",
+        "workspaceId": "wk_GmNQMciVNJ",
+        "folderId": "fl_l8vo45z6ZJ",
+        "authentication": {},
+        "authenticationType": null,
+        "body": {},
+        "bodyType": null,
+        "description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data.",
+        "headers": [],
+        "method": "GET",
+        "name": "get.order.process-order details",
+        "sortPriority": 100.0,
+        "url": "${[base_url_mock]}/api/order/process-order/details",
+        "urlParameters": [
+          {
+            "enabled": true,
+            "name": "key",
+            "value": "19009017",
+            "id": "CvhkCm64Rt"
+          },
+          {
+            "enabled": false,
+            "name": "name",
+            "value": "800000200",
+            "id": "eyIEGqhx9g"
+          }
+        ]
+      },
+      {
+        "model": "http_request",
+        "id": "rq_QywtpYttoH",
+        "createdAt": "2025-12-22T15:57:27.330917100",
+        "updatedAt": "2026-02-12T14:10:51.220324",
+        "workspaceId": "wk_GmNQMciVNJ",
+        "folderId": "fl_l8vo45z6ZJ",
+        "authentication": {},
+        "authenticationType": null,
+        "body": {},
+        "bodyType": null,
+        "description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data.",
+        "headers": [],
+        "method": "GET",
+        "name": "get-batch-transaction-history",
+        "sortPriority": 101.0,
+        "url": "${[base_url_mock]}/api/batch/transaction-history",
+        "urlParameters": [
+          {
+            "enabled": true,
+            "name": "batchName",
+            "value": "BX00002142   Bolsas_Piezas",
+            "id": "CvhkCm64Rt"
+          },
+          {
+            "enabled": false,
+            "name": "batchKey",
+            "value": "20",
+            "id": "eyIEGqhx9g"
+          },
+          {
+            "enabled": false,
+            "name": "orderAssociateType",
+            "value": "2024-10-20T23:59:59Z",
+            "id": "IdbZMTWzxP"
+          },
+          {
+            "enabled": false,
+            "name": "orderAssociateSubtype",
+            "value": "2025-12-20T23:59:59Z",
+            "id": "b79IYmj6I8"
+          }
+        ]
+      },
+      {
+        "model": "http_request",
+        "id": "rq_fheDkZwLsc",
+        "createdAt": "2025-12-10T21:25:56.723961800",
+        "updatedAt": "2026-02-12T14:10:51.220324",
+        "workspaceId": "wk_GmNQMciVNJ",
+        "folderId": "fl_l8vo45z6ZJ",
+        "authentication": {},
+        "authenticationType": null,
+        "body": {},
+        "bodyType": null,
+        "description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data.",
+        "headers": [],
+        "method": "GET",
+        "name": "get-batch-sublot",
+        "sortPriority": 102.0,
+        "url": "${[base_url_mock]}/api/batch/sublot",
+        "urlParameters": [
+          {
+            "enabled": true,
+            "name": "batchName",
+            "value": "BX00002142   Bolsas_Piezas",
+            "id": "CvhkCm64Rt"
+          },
+          {
+            "enabled": false,
+            "name": "batchKey",
+            "value": "20",
+            "id": "eyIEGqhx9g"
+          }
+        ]
+      },
+      {
+        "model": "http_request",
+        "id": "rq_ppgStzuRtY",
+        "createdAt": "2025-10-21T16:25:01.685436700",
+        "updatedAt": "2025-12-15T08:52:44.441158900",
+        "workspaceId": "wk_GmNQMciVNJ",
+        "folderId": "fl_GUrq6kTB8W",
+        "authentication": {},
+        "authenticationType": null,
+        "body": {
+          "text": "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:equ=\"http://adasoft.com/equipment\">\n   <soapenv:Header>\n   \t<transformed>false</transformed>\n   </soapenv:Header>   \n   <soapenv:Body>\n      <equ:EQUIPMENT>\n         <IDOC BEGIN=\"1\">\n            \t<EDI_DC40 SEGMENT=\"1\">\n            \t\t<DOCNUM>1</DOCNUM>\n        \t\t</EDI_DC40>\n            <ZZEQUIPMENT SEGMENT=\"1\">\n               <PLANT>1234</PLANT>\n               <ZZEQUIPMENTDETAILS SEGMENT=\"1\">\n                  <CODE>ValidacionNewEquip1</CODE>\n                  <DESCRIPTION>Prueba con la DummyClass</DESCRIPTION>\n                  <STATUS>0</STATUS>\n                  <EXDATE></EXDATE>\n               </ZZEQUIPMENTDETAILS>\n            </ZZEQUIPMENT>\n         </IDOC>\n      </equ:EQUIPMENT>\n   </soapenv:Body>\n</soapenv:Envelope>"
+        },
+        "bodyType": "other",
+        "description": "",
+        "headers": [
+          {
+            "enabled": true,
+            "name": "Content-Type",
+            "value": "",
+            "id": null
+          }
+        ],
+        "method": "POST",
+        "name": "EQUIPMENT REST",
+        "sortPriority": 8000.0,
+        "url": "http://localhost:8600/EQUIPMENT",
+        "urlParameters": []
+      },
+      {
+        "model": "http_request",
+        "id": "rq_A2LaMFAMrd",
+        "createdAt": "2025-10-21T16:25:01.685251300",
+        "updatedAt": "2025-12-10T22:08:04.739714800",
+        "workspaceId": "wk_GmNQMciVNJ",
+        "folderId": "fl_GUrq6kTB8W",
+        "authentication": {},
+        "authenticationType": null,
+        "body": {
+          "text": "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:equ=\"http://adasoft.com/equipment\">\r\n   <soapenv:Header>\r\n   \t<transformed>false</transformed>\r\n   </soapenv:Header>   \r\n   <soapenv:Body>\r\n      <equ:EQUIPMENT>\r\n         <IDOC BEGIN=\"1\">\r\n            \t<EDI_DC40 SEGMENT=\"1\">\r\n            \t\t<DOCNUM>1</DOCNUM>\r\n        \t\t</EDI_DC40>\r\n            <ZZEQUIPMENT SEGMENT=\"1\">\r\n               <PLANT>1234</PLANT>\r\n               <ZZEQUIPMENTDETAILS SEGMENT=\"1\">\r\n                  <CODE>ValidacionNewEquip1</CODE>\r\n                  <DESCRIPTION>Prueba con la DummyClass</DESCRIPTION>\r\n                  <STATUS>0</STATUS>\r\n                  <EXDATE></EXDATE>\r\n               </ZZEQUIPMENTDETAILS>\r\n            </ZZEQUIPMENT>\r\n         </IDOC>\r\n      </equ:EQUIPMENT>\r\n   </soapenv:Body>\r\n</soapenv:Envelope>"
+        },
+        "bodyType": "other",
+        "description": "",
+        "headers": [
+          {
+            "enabled": true,
+            "name": "Content-Type",
+            "value": "",
+            "id": null
+          }
+        ],
+        "method": "POST",
+        "name": "BATMAS REST",
+        "sortPriority": 7000.0,
+        "url": "http://localhost:8600/EQUIPMENT",
+        "urlParameters": []
+      },
+      {
+        "model": "http_request",
+        "id": "rq_eF5bTgWCSU",
+        "createdAt": "2025-10-21T16:25:01.685083700",
+        "updatedAt": "2025-12-10T22:08:04.731305800",
+        "workspaceId": "wk_GmNQMciVNJ",
+        "folderId": "fl_GUrq6kTB8W",
+        "authentication": {},
+        "authenticationType": null,
+        "body": {
+          "text": "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:equ=\"http://adasoft.com/equipment\">\r\n   <soapenv:Header>\r\n   \t<transformed>false</transformed>\r\n   </soapenv:Header>   \r\n   <soapenv:Body>\r\n      <equ:EQUIPMENT>\r\n         <IDOC BEGIN=\"1\">\r\n            \t<EDI_DC40 SEGMENT=\"1\">\r\n            \t\t<DOCNUM>1</DOCNUM>\r\n        \t\t</EDI_DC40>\r\n            <ZZEQUIPMENT SEGMENT=\"1\">\r\n               <PLANT>1234</PLANT>\r\n               <ZZEQUIPMENTDETAILS SEGMENT=\"1\">\r\n                  <CODE>ValidacionNewEquip1</CODE>\r\n                  <DESCRIPTION>Prueba con la DummyClass</DESCRIPTION>\r\n                  <STATUS>0</STATUS>\r\n                  <EXDATE></EXDATE>\r\n               </ZZEQUIPMENTDETAILS>\r\n            </ZZEQUIPMENT>\r\n         </IDOC>\r\n      </equ:EQUIPMENT>\r\n   </soapenv:Body>\r\n</soapenv:Envelope>"
+        },
+        "bodyType": "other",
+        "description": "",
+        "headers": [
+          {
+            "enabled": true,
+            "name": "Content-Type",
+            "value": "",
+            "id": null
+          }
+        ],
+        "method": "POST",
+        "name": "BATMAS",
+        "sortPriority": 6000.0,
+        "url": "http://localhost:8600/EQUIPMENT",
+        "urlParameters": []
+      },
+      {
+        "model": "http_request",
+        "id": "rq_tqHtFvAuEy",
+        "createdAt": "2025-10-21T16:25:01.684904400",
+        "updatedAt": "2025-12-10T22:08:04.721556900",
+        "workspaceId": "wk_GmNQMciVNJ",
+        "folderId": "fl_GUrq6kTB8W",
+        "authentication": {},
+        "authenticationType": null,
+        "body": {
+          "text": "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:equ=\"http://adasoft.com/equipment\">\r\n   <soapenv:Header>\r\n   \t<transformed>false</transformed>\r\n   </soapenv:Header>   \r\n   <soapenv:Body>\r\n      <equ:EQUIPMENT>\r\n         <IDOC BEGIN=\"1\">\r\n            \t<EDI_DC40 SEGMENT=\"1\">\r\n            \t\t<DOCNUM>1</DOCNUM>\r\n        \t\t</EDI_DC40>\r\n            <ZZEQUIPMENT SEGMENT=\"1\">\r\n               <PLANT>1234</PLANT>\r\n               <ZZEQUIPMENTDETAILS SEGMENT=\"1\">\r\n                  <CODE>ValidacionNewEquip1</CODE>\r\n                  <DESCRIPTION>Prueba con la DummyClass</DESCRIPTION>\r\n                  <STATUS>0</STATUS>\r\n                  <EXDATE></EXDATE>\r\n               </ZZEQUIPMENTDETAILS>\r\n            </ZZEQUIPMENT>\r\n         </IDOC>\r\n      </equ:EQUIPMENT>\r\n   </soapenv:Body>\r\n</soapenv:Envelope>"
+        },
+        "bodyType": "other",
+        "description": "",
+        "headers": [
+          {
+            "enabled": true,
+            "name": "Content-Type",
+            "value": "",
+            "id": null
+          }
+        ],
+        "method": "POST",
+        "name": "EQUIPMENT",
+        "sortPriority": 5000.0,
+        "url": "http://localhost:8600/EQUIPMENT",
+        "urlParameters": []
+      },
+      {
+        "model": "http_request",
+        "id": "rq_9Vs8zrrt87",
+        "createdAt": "2025-10-21T16:25:01.684713300",
+        "updatedAt": "2025-12-10T22:08:04.696522600",
+        "workspaceId": "wk_GmNQMciVNJ",
+        "folderId": "fl_GUrq6kTB8W",
+        "authentication": {},
+        "authenticationType": null,
+        "body": {
+          "text": "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:ord=\"http://adasoft.com/order\">\r\n   <soapenv:Header>\r\n        <transformed>false</transformed>\r\n    </soapenv:Header>\r\n   <soapenv:Body>\r\n      <ord:LOIPRO04>\r\n         <IDOC BEGIN=\"1\">\r\n            <EDI_DC40 SEGMENT=\"1\">\r\n               <TABNAM>EDI_DC40</TABNAM>\r\n               <DOCNUM>1</DOCNUM>\r\n               <DIRECT>1</DIRECT>\r\n               <IDOCTYP>LOIPRO04</IDOCTYP>\r\n               <MESTYP>LOIPRO</MESTYP>\r\n            </EDI_DC40>\r\n            <E1AFKOL SEGMENT=\"1\">\r\n               <AUFNR>RM2504111715</AUFNR>\r\n               <AUART>ZPI3</AUART>\r\n               <GAMNG>10.00</GAMNG>\r\n               <GLTRP>20240219</GLTRP>\r\n               <GMEIN>kg</GMEIN>\r\n               <GSTRP>20240201</GSTRP>\r\n               <MATNR>AdasoftPartTest</MATNR>\r\n               <WERKS></WERKS>\r\n               <E1JSTKL SEGMENT=\"1\">\r\n                  <STAT>I0045</STAT>\r\n               </E1JSTKL>\r\n               <E1AFFLL SEGMENT=\"1\">\r\n                  <E1AFVOL SEGMENT=\"1\">\r\n                     <E1RESBL SEGMENT=\"1\">\r\n                        <BDMNG>1.000</BDMNG>\r\n                        <MATNR>AdasoftPartTest</MATNR>\r\n                        <MEINS>kg</MEINS>\r\n                        <POSNR>0010</POSNR>\r\n                     </E1RESBL>\r\n                  </E1AFVOL>\r\n               </E1AFFLL>\r\n               <E1AFPOL SEGMENT=\"1\">\r\n                  <VERID>0002</VERID>\r\n               </E1AFPOL>\r\n               <ZADASOFTDATA SEGMENT=\"1\">\r\n                  <STABSAMPAPPL></STABSAMPAPPL>\r\n                  <STABSAMPLEQTY></STABSAMPLEQTY>\r\n               </ZADASOFTDATA>\r\n            </E1AFKOL>\r\n         </IDOC>\r\n      </ord:LOIPRO04>\r\n   </soapenv:Body>\r\n</soapenv:Envelope>"
+        },
+        "bodyType": "other",
+        "description": "",
+        "headers": [
+          {
+            "enabled": true,
+            "name": "Content-Type",
+            "value": "",
+            "id": null
+          }
+        ],
+        "method": "POST",
+        "name": "LOIPRO",
+        "sortPriority": 4000.0,
+        "url": "http://localhost:8600/LOIPRO04",
+        "urlParameters": []
+      },
+      {
+        "model": "http_request",
+        "id": "rq_arQzNrWtcr",
+        "createdAt": "2025-10-21T16:25:01.684536900",
+        "updatedAt": "2025-12-10T22:08:04.680167600",
+        "workspaceId": "wk_GmNQMciVNJ",
+        "folderId": "fl_GUrq6kTB8W",
+        "authentication": {},
+        "authenticationType": null,
+        "body": {
+          "text": "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:sub=\"http://adasoft.com/sublot\">\r\n   <soapenv:Header>\r\n   \r\n        <transformed>true</transformed>\r\n    </soapenv:Header>\r\n   <soapenv:Body>\r\n      <sub:STOCKREPORT>\r\n         <IDOC BEGIN=\"1\">\r\n\t\t\t\t<EDI_DC40 SEGMENT=\"1\">\r\n\t\t\t\t\t<TABNAM>EDI_DC40</TABNAM>\r\n\t\t\t\t\t<DOCNUM>1</DOCNUM>\r\n\t\t\t\t\t<DIRECT>1</DIRECT>\r\n\t\t\t\t\t<IDOCTYP>STOCKREPORT</IDOCTYP>\r\n\t\t\t\t\t<MESTYP>STOCKREPORT</MESTYP>\r\n\t\t\t\t</EDI_DC40>\r\n\t\t\t\t<ZE1STOCK SEGMENT=\"1\">\r\n\t\t\t\t\t<PLANT>ADAP</PLANT>\r\n\t\t\t\t\t<ZE1STOCKDETAILS SEGMENT=\"1\">\r\n\t\t\t\t\t\t<SUBLOT>0000000002</SUBLOT>\r\n\t\t\t\t\t\t<MATERIAL>AdasoftPartTest</MATERIAL>\r\n\t\t\t\t\t\t<BATCH>2502130909</BATCH>\r\n\t\t\t\t\t\t<QUANTITY>999999</QUANTITY>\r\n\t\t\t\t\t\t<UOM>bag</UOM>\r\n\t\t\t\t\t\t<ZADASOFTDATA SEGMENT=\"1\">\r\n\t\t\t\t\t\t\t<StorageLocation></StorageLocation>\r\n               \t\t\t\t<SublotStatus></SublotStatus>\r\n\t\t\t\t\t\t</ZADASOFTDATA>\r\n\t\t\t\t\t</ZE1STOCKDETAILS>\r\n\t\t\t\t</ZE1STOCK>\r\n\t\t\t</IDOC>\r\n      </sub:STOCKREPORT>\r\n   </soapenv:Body>\r\n</soapenv:Envelope>"
+        },
+        "bodyType": "other",
+        "description": "",
+        "headers": [
+          {
+            "enabled": true,
+            "name": "Content-Type",
+            "value": "",
+            "id": null
+          }
+        ],
+        "method": "POST",
+        "name": "STOCKREPORT",
+        "sortPriority": 3000.0,
+        "url": "https://localhost:8445/STOCKREPORT",
+        "urlParameters": []
+      },
+      {
+        "model": "http_request",
+        "id": "rq_bpFBjAFMmn",
+        "createdAt": "2025-10-21T16:25:01.684350600",
+        "updatedAt": "2025-12-10T22:08:04.666923700",
+        "workspaceId": "wk_GmNQMciVNJ",
+        "folderId": "fl_GUrq6kTB8W",
+        "authentication": {},
+        "authenticationType": null,
+        "body": {
+          "text": "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:bat=\"http://adasoft.com/batch\">\r\n   <soapenv:Header>   \r\n        <transformed>true</transformed>\r\n    </soapenv:Header>\r\n   <soapenv:Body>\r\n      <bat:BATMAS03>\r\n         <IDOC BEGIN=\"1\">\r\n            <EDI_DC40 SEGMENT=\"1\">\r\n\t            <TABNAM>EDI_DC40</TABNAM>\r\n\t            <DOCNUM>1</DOCNUM>\r\n\t            <DIRECT>1</DIRECT>\r\n\t            <IDOCTYP>BATMAS03</IDOCTYP>\r\n\t            <MESTYP>BATMAS</MESTYP>\r\n\t        \t</EDI_DC40>\r\n\t            <E1BATMAS SEGMENT=\"1\">\r\n\t               <MATERIAL>AdasoftPartTest</MATERIAL>\r\n\t               <BATCH>2502130909</BATCH>\r\n\t               <PLANT>ADAP</PLANT>\r\n\t               <E1BPBATCHATT SEGMENT=\"1\">\r\n\t                  <EXPIRYDATE>20300213</EXPIRYDATE>\r\n\t                  <NEXTINSPEC>20250213</NEXTINSPEC>\r\n\t                  <PROD_DATE>20250213</PROD_DATE>\r\n\t               </E1BPBATCHATT>\r\n\t               <E1BPBATCHSTATUS SEGMENT=\"1\">\r\n\t                  <RESTRICTED>R</RESTRICTED>\r\n\t               </E1BPBATCHSTATUS>\r\n\t               <ZADASOFTDATA SEGMENT=\"1\">\r\n\t                    <BatchPotency></BatchPotency>\r\n\t                </ZADASOFTDATA>\r\n\t            </E1BATMAS>\r\n         </IDOC>\r\n      </bat:BATMAS03>\r\n   </soapenv:Body>\r\n</soapenv:Envelope>"
+        },
+        "bodyType": "other",
+        "description": "",
+        "headers": [
+          {
+            "enabled": true,
+            "name": "Content-Type",
+            "value": "",
+            "id": null
+          }
+        ],
+        "method": "POST",
+        "name": "BATMAS",
+        "sortPriority": 2000.0,
+        "url": "http://localhost:8600/BATMAS03",
+        "urlParameters": []
+      },
+      {
+        "model": "http_request",
+        "id": "rq_hPsJieUPNJ",
+        "createdAt": "2025-10-21T16:25:01.684165",
+        "updatedAt": "2025-12-10T22:08:04.658064400",
+        "workspaceId": "wk_GmNQMciVNJ",
+        "folderId": "fl_GUrq6kTB8W",
+        "authentication": {},
+        "authenticationType": null,
+        "body": {
+          "text": "<ns2:MATMAS xmlns:ns2=\"http://adasoft.com/material\">\r\n    <IDOC BEGIN=\"1\">\r\n        <EDI_DC40 SEGMENT=\"1\">\r\n            <TABNAM>EDI_DC40</TABNAM>\r\n            <DOCNUM>1</DOCNUM>\r\n            <DIRECT>1</DIRECT>\r\n            <IDOCTYP>MATMAS04</IDOCTYP>\r\n            <MESTYP>MATMAS</MESTYP>\r\n        </EDI_DC40>\r\n        <E1MARAM SEGMENT=\"1\">\r\n            <MATNR>AdasoftPartTestApi</MATNR>\r\n            <MTART>ROH</MTART>\r\n            <MEINS>KGM</MEINS>\r\n            <E1MAKTM SEGMENT=\"1\">\r\n                <MAKTX>Descripcion AdasoftPartTest</MAKTX>\r\n                <SPRAS_ISO>EN</SPRAS_ISO>\r\n            </E1MAKTM>\r\n            <E1MARCM SEGMENT=\"1\">\r\n                <WERKS>ADAP</WERKS>\r\n            </E1MARCM>\r\n            <ZADASOFTDATA SEGMENT=\"1\">\r\n               <GHSImageName></GHSImageName>\r\n               <GHSSignalWordType></GHSSignalWordType>\r\n               <HazardClass1></HazardClass1>\r\n               <HazardClass2></HazardClass2>\r\n               <HazardClass3></HazardClass3>\r\n               <HazardClass4></HazardClass4>\r\n               <NFPAFire></NFPAFire>\r\n               <NFPAHealth></NFPAHealth>\r\n               <NFPAReactivity></NFPAReactivity>\r\n               <NFPASpecial></NFPASpecial>\r\n               <HazardCodes></HazardCodes>\r\n               <PrecautionaryCodes></PrecautionaryCodes>\r\n               <WeighingType></WeighingType>\r\n               <AllowedWeighingMethod></AllowedWeighingMethod>\r\n               <DefaultWeighingMethod></DefaultWeighingMethod>\r\n               <LowerToleranceAbsolute></LowerToleranceAbsolute>\r\n               <LowerToleranceRelative></LowerToleranceRelative>\r\n               <UpperToleranceRelative></UpperToleranceRelative>\r\n               <UpperToleranceAbsolute></UpperToleranceAbsolute>\r\n               <PlannedPotency></PlannedPotency>\r\n               <SamplingRequired></SamplingRequired>\r\n               <SamplingType></SamplingType>\r\n               <WHApplyForPicking></WHApplyForPicking>\r\n               <WHDefaultBatchStatus></WHDefaultBatchStatus>\r\n               <DefaultSublotQualityStatus></DefaultSublotQualityStatus>\r\n            </ZADASOFTDATA>\r\n        </E1MARAM>\r\n    </IDOC>\r\n</ns2:MATMAS>"
+        },
+        "bodyType": "other",
+        "description": "",
+        "headers": [
+          {
+            "enabled": true,
+            "name": "Content-Type",
+            "value": "",
+            "id": null
+          }
+        ],
+        "method": "POST",
+        "name": "MATMAS REST",
+        "sortPriority": 1000.0,
+        "url": "https://localhost:8445/api/matmas",
+        "urlParameters": []
+      },
+      {
+        "model": "http_request",
+        "id": "rq_QG3PfWNdgS",
+        "createdAt": "2025-10-21T16:25:01.683944400",
+        "updatedAt": "2025-12-10T22:08:04.628911800",
+        "workspaceId": "wk_GmNQMciVNJ",
+        "folderId": "fl_GUrq6kTB8W",
+        "authentication": {},
+        "authenticationType": null,
+        "body": {
+          "text": "<soapenv:Envelope\nxmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\"\nxmlns:ns2=\"http://adasoft.com/material\">\n    <soapenv:Header>\n        <transformed>true</transformed>\n    </soapenv:Header>\n    <soapenv:Body>\n<ns2:MATMAS xmlns:ns2=\"http://adasoft.com/material\">\n    <IDOC BEGIN=\"1\">\n        <EDI_DC40 SEGMENT=\"1\">\n            <TABNAM>EDI_DC40</TABNAM>\n            <DOCNUM>1</DOCNUM>\n            <DIRECT>1</DIRECT>\n            <IDOCTYP>MATMAS04</IDOCTYP>\n            <MESTYP>MATMAS</MESTYP>\n        </EDI_DC40>\n        <E1MARAM SEGMENT=\"1\">\n            <MATNR>AdasoftPartTest2</MATNR>\n            <MTART>roh</MTART>\n            <MEINS>bg</MEINS>\n            <E1MAKTM SEGMENT=\"1\">\n                <MAKTX>Test descripcion</MAKTX>\n                <SPRAS_ISO>EN</SPRAS_ISO>\n            </E1MAKTM>\n            <E1MARCM SEGMENT=\"1\">\n                <WERKS>ADAP</WERKS>\n            </E1MARCM>\n            <ZADASOFTDATA SEGMENT=\"1\">\n               <GHSImageName></GHSImageName>\n               <GHSSignalWordType></GHSSignalWordType>\n               <HazardClass1></HazardClass1>\n               <HazardClass2></HazardClass2>\n               <HazardClass3></HazardClass3>\n               <HazardClass4></HazardClass4>\n               <NFPAFire></NFPAFire>\n               <NFPAHealth></NFPAHealth>\n               <NFPAReactivity></NFPAReactivity>\n               <NFPASpecial></NFPASpecial>\n               <HazardCodes></HazardCodes>\n               <PrecautionaryCodes></PrecautionaryCodes>\n               <WeighingType></WeighingType>\n               <AllowedWeighingMethod></AllowedWeighingMethod>\n               <DefaultWeighingMethod></DefaultWeighingMethod>\n               <LowerToleranceAbsolute></LowerToleranceAbsolute>\n               <LowerToleranceRelative></LowerToleranceRelative>\n               <UpperToleranceRelative></UpperToleranceRelative>\n               <UpperToleranceAbsolute></UpperToleranceAbsolute>\n               <PlannedPotency></PlannedPotency>\n               <SamplingRequired></SamplingRequired>\n               <SamplingType></SamplingType>\n               <WHApplyForPicking></WHApplyForPicking>\n               <WHDefaultBatchStatus></WHDefaultBatchStatus>\n               <DefaultSublotQualityStatus></DefaultSublotQualityStatus>\n            </ZADASOFTDATA>\n        </E1MARAM>\n    </IDOC>\n</ns2:MATMAS> \n</soapenv:Body>\n</soapenv:Envelope>"
+        },
+        "bodyType": "other",
+        "description": "",
+        "headers": [
+          {
+            "enabled": true,
+            "name": "Content-Type",
+            "value": "",
+            "id": null
+          }
+        ],
+        "method": "POST",
+        "name": "MATMAS",
+        "sortPriority": 0.0,
+        "url": "https://localhost:8445/MATMAS",
+        "urlParameters": []
+      }
+    ],
+    "grpcRequests": [],
+    "websocketRequests": []
+  }
+}

@@ -1,0 +1,155 @@
+server:
+  application:
+    name: Symcont Pharmasuite Api
+    version: 1.1.1.1
+  port: 9101
+  http2:
+    enabled: true
+  ssl:
+    enabled: ${app.security.https.enabled}
+    key-store: C:/Adasoft/certs/SERVER144.p12
+    key-store-password: RoviEbr1984
+    key-store-type: PKCS12
+    key-alias: server144
+    trust-store: C:/Adasoft/certs/fta_truststore.p12
+    trust-store-password: RoviEbr1984
+    trust-store-type: PKCS12
+    enabled-protocols: TLSv1.3,TLSv1.2
+  tomcat:
+    mbeanregistry:
+      enabled: true
+    threads:
+      max: 300        # Máximo de peticiones concurrentes que puede atender Tomcat al mismo tiempo
+      min-spare: 100  # Hilos mínimos siempre vivos para evitar latencia en picos iniciales
+    connection-timeout: 180000
+    keep-alive-timeout: 60000
+    accept-count: 200
+    max-connections: 2000
+  address: 0.0.0.0
+  error:
+    include-message: always
+
+app:
+  security:
+    sso:
+      enabled: false
+    https:
+      enabled: true
+      http:
+        enable: true
+        port: 9102
+  custom:
+    enable: false
+    jvm-params:
+      language: en
+      region: us
+      sslTrustStoreType: Windows-ROOT
+      activemqSerializablePackages: "*"
+      defaultButtonFollowFocus: false
+    async:
+      thread:
+        timeout: 30              # timeout de cada hilo
+      semaphore:
+        pool: 20                 # Hilos maximo que usara cada request para mapear
+      core-pool-size: 50        # Hilos base siempre activos para tareas en segundo plano (carga normal)
+      max-pool-size: 200         # Máximo absoluto de hilos async (NUNCA por encima de tomcat.max=400)
+      queue-capacity: 50       # Tareas que pueden esperar en cola antes de crear nuevos hilos
+      thread-name-prefix: "AsyncExecutor-"  # Prefijo para identificar hilos en logs y dumps
+      keep-alive-seconds: 80     # Tiempo que viven los hilos extra (por encima del core) antes de destruirse
+    buildtime:
+      url: "http://127.0.0.1"
+      remoteUrl: "remote+https://127.0.0.1:8443"
+      baseUrl: "https://127.0.0.1:8443"
+      plantOperationsUrl: "https://127.0.0.1:8443/PlantOperations"
+      user: admin
+      pass: admin1
+      logLevel: INFO
+
+spring:
+  config:
+    import: "optional:classpath:application-springdoc.yml"
+  jackson:
+    serialization:
+      indent-output: true
+    parser:
+      allow-unquoted-field-names: true
+      allow-single-quotes: true
+    default-property-inclusion: ALWAYS
+    date-format: "yyyy-MM-dd'T'HH:mm:ss.SSS"
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.gson.GsonAutoConfiguration
+  mvc:
+    async:
+      request-timeout: 0
+    converters:
+      preferred-json-mapper: jackson
+  main:
+    lazy-initialization: false
+
+
+mcp:
+  server:
+    name: "Adasoft - Pharmasuite Api MCP Server"
+
+logging:
+  config: classpath:log4j2.xml
+
+dashboard:
+  states:
+    finished:
+      - Finished
+      - Reviewed
+    running:
+      - Finished
+      - InProcess
+      - Reviewed
+springdoc:
+  api-docs:
+    version: openapi_3_0
+    enabled: true
+  swagger-ui:
+    path: /
+    enabled: true
+  custom:
+    title: API-PS
+    description: ApiGw-Pharmasuite
+    terms-of-service: https://www.adasoft.es/terms
+    contact:
+      name: Adasoft
+      url: https://www.adasoft.es/contact
+      email: admin@adasoft.es
+    license:
+      name: Comercial License
+      url: https://www.adasoft.es/license
+    version: ${server.application.version}
+
+filters:
+  default:
+    monthInterval: 3
+
+websocket:
+  time: 600000
+
+cache:
+  custom:
+    default: 60000 #miliseconds
+    order:
+      process-order: ${cache.custom.default}
+    batch:
+      all: ${cache.custom.default}
+    recipe:
+      all: ${cache.custom.default}
+    workflow:
+      all: ${cache.custom.default}
+    exception:
+      all: ${cache.custom.default}
+    dashboard:
+      exceptions:
+        summary: ${cache.custom.default}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,configprops,httpexchanges

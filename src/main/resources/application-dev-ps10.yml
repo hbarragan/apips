@@ -1,0 +1,45 @@
+app:
+  security:
+    sso:
+      enabled: false
+    https:
+      enabled: true
+      http:
+        enable: true
+        port: 9102
+  custom:
+    enable: true
+    jvm-params:
+      language: en
+      region: us
+      sslTrustStoreType: Windows-ROOT
+      activemqSerializablePackages: "*"
+      defaultButtonFollowFocus: false
+    buildtime:
+      url: "http://localhost"
+      remoteUrl: "http://localhost:8080"
+      baseUrl: "http://localhost:8080"
+      plantOperationsUrl: "http://localhost:8080/PlantOperations"
+      user: admin
+      pass: admin
+server:
+  port: 9101
+  ssl:
+    key-store: C:/Adasoft/certs/server144.p12
+    key-store-password: RoviEbr1984
+    key-store-type: PKCS12
+    key-alias: server144
+    trust-store: C:/Adasoft/certs/fta_truststore.p12
+    trust-store-password: RoviEbr1984
+    trust-store-type: PKCS12
+
+websocket:
+  time: 300000
+
+cache:
+  custom:
+    default: 60000
+
+spring:
+  main:
+    lazy-initialization: true

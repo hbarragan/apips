@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!-- Common config.xml including all service definitions  -->
+<configuration>
+    <override>
+        <hierarchicalXml fileName="ct-Adasoft-Legacy.xml" config-optional="true" />
+        <hierarchicalXml fileName="ct-Adasoft-red-functions.xml" config-optional="true" />
+        <!-- <hierarchicalXml fileName="ct-Adasoft-dm-functions.xml" config-optional="true" /> -->
+        <hierarchicalXml fileName="apps-ebr.xml" config-optional="true"/>
+        <hierarchicalXml fileName="apps-wd.xml" />
+        <hierarchicalXml fileName="apps-wip.xml" />
+        <hierarchicalXml fileName="apps-recipeeditor.xml" />
+        <hierarchicalXml fileName="clientfw-commons.xml" />
+        <hierarchicalXml fileName="clientfw-grapheditor.xml" />
+
+        <hierarchicalXml fileName="clientfw-pec.xml" config-optional="true"/>
+        <hierarchicalXml fileName="clientfw-pmc.xml" />
+        <hierarchicalXml fileName="commons-base.xml" />
+        <hierarchicalXml fileName="commons-deviation.xml" />
+        <hierarchicalXml fileName="commons-livedata.xml" config-optional="true" />
+        <hierarchicalXml fileName="commons-messaging.xml" config-optional="true" />
+        <hierarchicalXml fileName="commons-versioning.xml" />
+        <hierarchicalXml fileName="commons-security.xml" />
+        <hierarchicalXml fileName="commons-audittrail.xml" />
+        <hierarchicalXml fileName="ct-Customer-SublotBarcode.xml" config-optional="true" />
+        <!--<hierarchicalXml fileName="ADA-sublotBarcode.xml" config-optional="true"/>-->
+        <hierarchicalXml fileName="services-archivepurge.xml" config-optional="true" />
+        <!--<hierarchicalXml fileName="services-batchrecord.xml" config-optional="true" />-->
+        <hierarchicalXml fileName="services-batchreport.xml" config-optional="true" />
+        <hierarchicalXml fileName="services-eqm.xml" />
+        <hierarchicalXml fileName="services-eto.xml" config-optional="true" />
+        <hierarchicalXml fileName="services-inventory.xml" />
+        <hierarchicalXml fileName="services-recipe.xml" />
+        <!--<hierarchicalXml fileName="ADA-services-s88.xml" config-optional="true" />-->
+        <hierarchicalXml fileName="services-s88.xml" />
+        <hierarchicalXml fileName="services-s88eqmexportimport.xml" config-optional="true" />
+        <hierarchicalXml fileName="services-s88equipment.xml" config-optional="true" />
+        <hierarchicalXml fileName="ADA-services-wd.xml" config-optional="true" />
+        <hierarchicalXml fileName="services-wd.xml" />
+        <hierarchicalXml fileName="ADA-services-wip.xml" config-optional="true" />
+        <hierarchicalXml fileName="services-wip.xml" />
+        <hierarchicalXml fileName="ADA-services-order.xml" config-optional="true" />
+        <hierarchicalXml fileName="ADA-explosion-service.xml" config-optional="true" />
+        <hierarchicalXml fileName="services-order.xml" config-optional="true" />
+        <!--<hierarchicalXml fileName="services-exportrecord.xml" config-optional="true" />-->
+    </override>
+</configuration>

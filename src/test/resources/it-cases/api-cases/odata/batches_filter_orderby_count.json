@@ -1,0 +1,16 @@
+{
+  "name": "GET /odata/Batches filter+orderby+count",
+  "method": "GET",
+  "path": "/odata/Batches",
+  "query": {
+    "$filter": "creationTime ge 2025-12-01T00:00:00Z",
+    "$orderby": "creationTime desc",
+    "$count": true,
+    "$top": 5
+  },
+  "expect": {
+    "status": 200,
+    "bodyType": "OBJECT",
+    "requiredJsonPaths": ["value", "$['@odata.count']"]
+  }
+}

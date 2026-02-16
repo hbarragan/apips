@@ -1,0 +1,13 @@
+{
+  "name": "GET /odata/Recipes basic",
+  "method": "GET",
+  "path": "/odata/Recipes",
+  "query": {
+    "$top": 1
+  },
+  "expect": {
+    "status": 200,
+    "bodyType": "OBJECT",
+    "requiredJsonPaths": ["value"]
+  }
+}

@@ -1,0 +1,53 @@
+app:
+  security:
+    sso:
+      enabled: false
+    https:
+      enabled: true
+      http:
+        enable: true
+        port: 9102
+  custom:
+    async:
+      thread:
+        timeout: 30
+      semaphore:
+        pool: 10
+      core-pool-size: 50          # Aumentar hilos base (25% de tomcat.max)
+      max-pool-size: 100          # Permitir escalado hasta 50% de tomcat.max
+      queue-capacity: 50          # Permitir cola para absorber picos
+      thread-name-prefix: "AsyncExecutor-"
+      keep-alive-seconds: 60      # Reducir tiempo de vida de hilos extra
+    enable: true
+    jvm-params:
+      language: en
+      region: us
+      sslTrustStoreType: Windows-ROOT
+      activemqSerializablePackages: "*"
+      defaultButtonFollowFocus: false
+    buildtime:
+      url: "http://SERVER144"
+      remoteUrl: "https://SERVER144:8443"
+      baseUrl: "https://SERVER144:8443"
+      plantOperationsUrl: "https://SERVER144:8443/PlantOperations"
+      user: admin
+      pass: admin1
+server:
+  tomcat:
+    threads:
+      max: 200
+      min-spare: 50
+  port: 9101
+
+websocket:
+  time: 300000
+
+cache:
+  custom:
+    default: 60000
+
+spring:
+  main:
+    lazy-initialization: true
+
+

@@ -1,0 +1,40 @@
+{
+  "name": "WS test for order paged cache flow",
+  "subscribeMessage": {
+    "action": "ADD",
+    "varName": "IT-TEST"
+  },
+  "httpCalls": [
+    {
+      "method": "GET",
+      "path": "/api/order/process-order-paged",
+      "query": {
+        "enableCache": true,
+        "numPage": 1,
+        "numRows": 10
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/order/process-order-paged",
+      "query": {
+        "enableCache": true,
+        "numPage": 1,
+        "numRows": 10
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/order/process-order-paged",
+      "query": {
+        "enableCache": false,
+        "numPage": 1,
+        "numRows": 10
+      }
+    }
+  ],
+  "expect": {
+    "subscribeAck": "info:Subscribed IT-TEST",
+    "expectedMessagesPerCall": [1, 1, 1]
+  }
+}

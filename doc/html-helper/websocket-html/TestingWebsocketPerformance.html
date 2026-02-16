@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Prueba 40 conexiones: GET + WebSocket</title>
+    <style>
+        :root { font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, "Helvetica Neue", Arial, sans-serif; }
+        body { margin: 0; background: #0f172a; color: #e2e8f0; }
+        .container { max-width: 1100px; margin: 0 auto; padding: 24px; }
+        h1 { font-size: 18px; margin: 0 0 12px; }
+        .card { background: #111827; border: 1px solid #1f2937; border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+        .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .row-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+        label { font-size: 12px; color: #9ca3af; display: block; margin-bottom: 6px; }
+        input[type="text"], input[type="number"] { width: 100%; padding: 10px 12px; border-radius: 10px; border: 1px solid #374151; background: #0b1220; color: #e5e7eb; }
+        .actions { display: flex; gap: 8px; flex-wrap: wrap; }
+        button { padding: 10px 14px; border-radius: 12px; background: #2563eb; color: white; border: none; cursor: pointer; font-weight: 600; }
+        button.secondary { background: #374151; }
+        button.danger { background: #dc2626; }
+        .status { font-size: 12px; color: #9ca3af; }
+        .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+        .log { background: #0b1220; border: 1px solid #1f2937; border-radius: 12px; padding: 12px; height: 320px; overflow: auto; white-space: pre-wrap; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; font-size: 12px; }
+        .badge { display: inline-block; padding: 2px 8px; border-radius: 999px; background: #1f2937; color: #e5e7eb; font-size: 11px; margin-right: 6px; }
+        .ok { color: #34d399; }
+        .err { color: #f87171; }
+        .muted { color: #94a3b8; }
+        .tiny { font-size: 11px; }
+        .hl { color: #93c5fd; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Prueba de carga: 40 conexiones (GET + WebSocket)</h1>
+
+    <div class="card">
+        <div class="row">
+            <div>
+                <label>URL REST (GET por conexión)</label>
+                <input id="restUrl" type="text" value="http://localhost:9102/api/order/process-order-paged?numPage=1&numRows=20&erpStartDate=2024-06-20T23%3A59%3A59Z&erpFinishDate=2025-06-20T23%3A59%3A59Z&accessPrivilege=JC_Visualizacion&all=false&varSubscribe=order_27.o77&timeQuartz=20000&enableCache=false&lastMonthsInterval=3&initCreationDate=2025-01-01T23%3A59%3A59Z&finishCreationDate=2025-01-31T23%3A59%3A59Z'" />
+            </div>
+            <div>
+                <label>URL WebSocket</label>
+                <input id="wsUrl" type="text" value="ws://localhost:9102/ws" />
+            </div>
+        </div>
+        <div class="row-3" style="margin-top:12px;">
+            <div>
+                <label>Prefijo de variable (varName y varSubscribe)</label>
+                <input id="varPrefix" type="text" value="order_" />
+            </div>
+            <div>
+                <label>Índice inicial</label>
+                <input id="startIndex" type="number" value="1" min="0" />
+            </div>
+            <div>
+                <label>Nº conexiones</label>
+                <input id="connCount" type="number" value="40" min="1" max="500" />
+            </div>
+        </div>
+        <div class="row-3" style="margin-top:12px;">
+            <div>
+                <label>Nombre del parámetro en la URL (query)</label>
+                <input id="queryParamName" type="text" value="varSubscribe" />
+            </div>
+            <div>
+                <label>Mensaje de suscripción (solo lectura)</label>
+                <input id="subscribeTemplate" type="text" value='{"action":"ADD","varName":"${varName}"}' readonly />
+            </div>
+            <div style="display:flex; align-items:flex-end; gap:12px;">
+                <div>
+                    <input id="autoScroll" type="checkbox" checked />
+                    <label for="autoScroll">Auto-scroll logs</label>
+                </div>
+            </div>
+        </div>
+        <div class="actions" style="margin-top:14px;">
+            <button id="startBtn">Iniciar</button>
+            <button id="stopBtn" class="danger">Detener y cerrar todo</button>
+            <button id="clearBtn" class="secondary">Limpiar logs</button>
+            <span class="status" id="status"></span>
+        </div>
+    </div>
+
+    <div class="grid">
+        <div class="card">
+            <div class="tiny muted" style="margin-bottom:6px;">Eventos</div>
+            <div id="events" class="log" aria-label="Eventos"></div>
+        </div>
+        <div class="card">
+            <div class="tiny muted" style="margin-bottom:6px;">Mensajes recibidos (WS)</div>
+            <div id="messages" class="log" aria-label="Mensajes"></div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="tiny muted" style="margin-bottom:6px;">Estadísticas</div>
+        <div id="stats" class="log" style="height: 120px;"></div>
+    </div>
+
+    <div class="card tiny muted">
+        <div><span class="badge">Ayuda</span> Por cada conexión i, se hace <span class="hl">GET</span> a la URL ajustando <code>varSubscribe</code> = <code>prefijo + (inicio + i)</code>, luego se abre un <span class="hl">WebSocket</span> a la URL indicada y se envía <code>{"action":"ADD","varName":"prefijo + (inicio + i)"}</code>. Se imprimen los mensajes de todos los sockets. Se mide el tiempo hasta la 1ª respuesta por socket.</div>
+    </div>
+</div>
+
+<!-- Script normal (no module) sin awaits sueltos fuera de funciones -->
+<script>
+    const qs = (sel) => document.querySelector(sel);
+    const eventsEl = qs('#events');
+    const msgsEl = qs('#messages');
+    const statusEl = qs('#status');
+
+    let sockets = [];
+    let stopping = false;
+    // Métricas de latencia (tiempo hasta la 1ª respuesta por socket)
+    let pending = new Map(); // varName -> t0 (performance.now())
+    let latencies = []; // ms
+    let receivedCount = 0;
+
+    function log(where, text, cls = '') {
+      const el = where === 'events' ? eventsEl : msgsEl;
+      const div = document.createElement('div');
+      if (cls) div.className = cls;
+      const time = new Date().toISOString().split('T')[1].replace('Z','');
+      div.textContent = `[${time}] ${text}`;
+      el.appendChild(div);
+      if (qs('#autoScroll').checked) {
+        el.scrollTop = el.scrollHeight;
+      }
+    }
+
+    function setStatus(text) {
+      statusEl.textContent = text;
+    }
+
+    function fmtMs(ms){ return `${ms.toFixed(1)} ms`; }
+    function updateStats(){
+      const n = latencies.length;
+      const avg = n ? latencies.reduce((a,b)=>a+b,0)/n : 0;
+      const min = n ? Math.min(...latencies) : 0;
+      const max = n ? Math.max(...latencies) : 0;
+      const html = `Conexiones con 1ª respuesta: ${n}
+`+
+                   `Tiempo medio (1ª respuesta): ${fmtMs(avg)}
+`+
+                   `Mínimo: ${fmtMs(min)} | Máximo: ${fmtMs(max)}`;
+      const el = qs('#stats');
+      if (el) { el.textContent = html; if (qs('#autoScroll')?.checked) { el.scrollTop = el.scrollHeight; } }
+    }
+    function resetStats(){ pending.clear(); latencies = []; receivedCount = 0; updateStats(); }
+
+    async function start() {
+      stopping = false;
+      setStatus('Iniciando...');
+      resetStats();
+
+      const restUrlStr = qs('#restUrl').value.trim();
+      const wsUrl = qs('#wsUrl').value.trim();
+      const varPrefix = qs('#varPrefix').value;
+      const startIndex = parseInt(qs('#startIndex').value, 10) || 0;
+      const count = Math.max(1, Math.min(500, parseInt(qs('#connCount').value, 10) || 1));
+      const qParam = qs('#queryParamName').value.trim() || 'varSubscribe';
+
+      // Cerrar anteriores
+      sockets.forEach(s => { try { s.close(1000, 'reset'); } catch(_){} });
+      sockets = [];
+
+      for (let i = 0; i < count; i++) {
+        if (stopping) break;
+        const idx = startIndex + i;
+        const varName = `${varPrefix}${idx}`;
+
+        // 1) GET con varSubscribe ajustado
+        let finalGetUrl;
+        try {
+          const u = new URL(restUrlStr);
+          u.searchParams.set(qParam, varName);
+          finalGetUrl = u.toString();
+        } catch (e) {
+          log('events', `URL REST inválida: ${e.message}`, 'err');
+          setStatus('Error en la URL REST');
+          return;
+        }
+
+        log('events', `[#${i+1}] GET → ${finalGetUrl}`, 'muted');
+        try {
+          const resp = await fetch(finalGetUrl, { method: 'GET' });
+          log('events', `[#${i+1}] GET status ${resp.status}`, resp.ok ? 'ok' : 'err');
+        } catch (e) {
+          log('events', `[#${i+1}] GET error: ${e}`, 'err');
+        }
+
+        // 2) WebSocket y envío de mensaje
+        let ws;
+        try {
+          ws = new WebSocket(wsUrl);
+        } catch (e) {
+          log('events', `[#${i+1}] WS error al crear: ${e}`, 'err');
+          continue;
+        }
+        const id = i + 1;
+        sockets.push(ws);
+
+        ws.addEventListener('open', () => {
+          log('events', `[#${id}] WS abierto (varName=${varName})`, 'ok');
+          const payload = { action: 'ADD', varName };
+          try {
+            ws.send(JSON.stringify(payload));
+            pending.set(varName, performance.now()); // inicio de espera para 1ª respuesta
+            log('events', `[#${id}] → send ${JSON.stringify(payload)}`, 'muted');
+          } catch (e) {
+            log('events', `[#${id}] Error al enviar: ${e}`, 'err');
+          }
+        });
+
+        ws.addEventListener('message', (ev) => {
+          let suffix = '';
+          if (pending.has(varName)) {
+            const t0 = pending.get(varName);
+            const dt = performance.now() - t0;
+            pending.delete(varName);
+            latencies.push(dt);
+            receivedCount++;
+            suffix = ` (+${dt.toFixed(1)} ms)`;
+            updateStats();
+          }
+          log('messages', `[#${id}] ${varName} ← ${ev.data}${suffix}`);
+        });
+
+        ws.addEventListener('error', () => {
+          log('events', `[#${id}] WS error`, 'err');
+        });
+
+        ws.addEventListener('close', (ev) => {
+          log('events', `[#${id}] WS cerrado (code=${ev.code}, reason=${ev.reason || '—'})`, 'muted');
+        });
+
+        // Pequeño delay para no abrir los 40 exactamente al mismo milisegundo
+        await new Promise(r => setTimeout(r, 50));
+      }
+
+      setStatus('Hecho. Conexiones iniciadas.');
+    }
+
+    function stopAll() {
+      stopping = true;
+      let n = 0;
+      sockets.forEach(ws => { try { ws.close(1000, 'stop all'); n++; } catch(_){} });
+      sockets = [];
+      resetStats();
+      setStatus(`Cerradas ${n} conexiones.`);
+    }
+
+    function clearLogs() {
+      eventsEl.textContent = '';
+      msgsEl.textContent = '';
+      resetStats();
+      setStatus('');
+    }
+
+    qs('#startBtn').addEventListener('click', () => { start(); });
+    qs('#stopBtn').addEventListener('click', () => { stopAll(); });
+    qs('#clearBtn').addEventListener('click', () => { clearLogs(); });
+</script>
+</body>
+</html>

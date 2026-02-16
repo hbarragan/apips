@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Prueba WebSocket</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 1rem; background: #fff; color: #333; }
+        #controls { margin-bottom: 1rem; }
+        #log {
+          background: #f8f8f8;
+          padding: 1rem;
+          height: 300px;
+          overflow-y: auto;
+          white-space: pre-wrap;
+          border: 1px solid #ccc;
+          font-family: monospace;
+        }
+        input, button { font-size: 1rem; margin-right: .5rem; }
+        table { border-collapse: collapse; }
+        td { padding: 4px; vertical-align: middle; }
+        .log-info    { color: #0074d9; }
+        .log-send    { color: #2ecc40; }
+        .log-receive { color: #ff851b; }
+        .log-error   { color: #ff4136; }
+    </style>
+</head>
+<body>
+<h1>Cliente WebSocket de Prueba</h1>
+<div id="controls">
+    <table>
+        <tr>
+            <td><label for="varName">varName:</label></td>
+            <td><input type="text" id="varName" value="XYZ" /></td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <button id="btnSub">Subscribed</button>
+                <button disabled id="btnUnsub">Unsubscribed</button>
+                <button onclick="clearLog()">🧹 Limpiar Log</button>
+            </td>
+        </tr>
+    </table>
+</div>
+<div id="log"></div>
+
+<script>
+    const logEl    = document.getElementById('log');
+    const varInput = document.getElementById('varName');
+
+    const socket = new WebSocket('ws://localhost:9102/ws');
+
+    socket.addEventListener('open', () => appendLog('Conexión abierta', 'info'));
+    socket.addEventListener('message', e => {
+      try {
+        const json = JSON.parse(e.data);
+        appendLog('📥 Recibido:\n' + JSON.stringify(json, null, 2), 'receive');
+      } catch {
+        appendLog('📥 Recibido: ' + e.data, 'receive');
+      }
+    });
+    socket.addEventListener('error', () => appendLog('⚠️ Error en conexión', 'error'));
+    socket.addEventListener('close', () => appendLog('❌ Conexión cerrada', 'error'));
+
+    document.getElementById('btnSub').onclick = () => {
+      const varName = varInput.value.trim();
+      if (!varName) return;
+      const msg = { action: "ADD", varName };
+      sendWS(msg);
+
+      toggleButtons(true);
+    };
+
+    document.getElementById('btnUnsub').onclick = () => {
+      const varName = varInput.value.trim();
+      if (!varName) return;
+      const msg = { action: "REMOVE", varName };
+      sendWS(msg);
+      toggleButtons(false);
+    };
+
+    function sendWS(obj) {
+      const msg = JSON.stringify(obj);
+      socket.send(msg);
+      appendLog('🚀 Enviado:\n' + JSON.stringify(obj, null, 2), 'send');
+    }
+
+    function toggleButtons(subscribed) {
+      document.getElementById('btnSub').disabled   = subscribed;
+      document.getElementById('btnUnsub').disabled = !subscribed;
+    }
+
+    function appendLog(text, type = 'info') {
+      const time = new Date().toLocaleTimeString();
+      const span = document.createElement('div');
+      span.className = 'log-' + type;
+      span.innerText = `[${time}] ${text}`;
+      logEl.appendChild(span);
+      logEl.scrollTop = logEl.scrollHeight;
+    }
+
+    function clearLog() {
+      logEl.innerHTML = '';
+    }
+
+    window.addEventListener('beforeunload', () => {
+      const varName = varInput.value.trim();
+      if (socket.readyState === WebSocket.OPEN && varName) {
+        socket.send(JSON.stringify({ action: "REMOVE", varName }));
+      }
+    });
+</script>
+</body>
+</html>

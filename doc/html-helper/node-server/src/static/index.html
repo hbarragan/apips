@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Recipes OData Explorer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@500;700;800&family=Manrope:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div class="noise-layer"></div>
+  <main class="layout-shell">
+    <section class="hero-card">
+      <p class="chip">Node + OData</p>
+      <h1>Recipes Query Studio</h1>
+      <p class="hero-subtitle">Panel de filtros y ordenación para validar casuísticas OData de <strong>/Recipes</strong>.</p>
+      <div class="hero-meta">
+        <span id="statusBadge" class="status idle">Idle</span>
+        <code id="requestInfo">GET /api/recipes</code>
+      </div>
+    </section>
+
+    <section class="filters-card">
+      <header>
+        <h2>Filtros concatenables</h2>
+        <p>Puedes combinar múltiples filtros con <code>and</code>, más paginación y orden.</p>
+      </header>
+
+      <div id="filterGrid" class="filter-grid"></div>
+
+      <div class="query-controls">
+        <label>Order by
+          <select id="orderField"></select>
+        </label>
+        <label>Direction
+          <select id="orderDirection"></select>
+        </label>
+        <label>$top
+          <input id="topInput" type="number" min="1" value="5" />
+        </label>
+        <label>$skip
+          <input id="skipInput" type="number" min="0" value="0" />
+        </label>
+        <label class="checkbox-wrap">
+          <input id="countInput" type="checkbox" checked />
+          <span>Incluir $count</span>
+        </label>
+      </div>
+
+      <div class="actions">
+        <button id="searchBtn" class="btn primary">Buscar</button>
+        <button id="clearBtn" class="btn ghost">Limpiar</button>
+      </div>
+
+      <div class="url-box">
+        <p>URL generada</p>
+        <code id="generatedUrl">/api/recipes?$top=5</code>
+      </div>
+    </section>
+
+    <section class="results-card">
+      <header>
+        <h2>Resultados</h2>
+        <p id="resultSummary">Sin resultados todavía.</p>
+      </header>
+      <div class="table-wrap">
+        <table id="resultTable">
+          <thead></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <pre id="rawJson" class="raw-json"></pre>
+    </section>
+  </main>
+
+  <script type="module" src="./app.js"></script>
+</body>
+</html>

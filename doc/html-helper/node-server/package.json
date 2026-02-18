@@ -1,0 +1,15 @@
+{
+  "name": "odata-recipes-helper",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Node.js helper app to query OData Recipes with dynamic filters and ordering.",
+  "type": "module",
+  "scripts": {
+    "build": "node ./scripts/build.mjs",
+    "start": "node ./src/server/index.mjs",
+    "start:build": "node ./build/server/index.mjs"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
